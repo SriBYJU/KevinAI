@@ -1162,19 +1162,13 @@ function downloadEdited() {
 // ─────────────────────────────────────────────
 async function runAgent() {
   const task = document.getElementById('taskInput').value.trim();
-  
-  if (!task) {
-    document.getElementById('taskInput').focus();
-    return;
-  }
+  if (!task) { document.getElementById('taskInput').focus(); return; }
 
-  // === UI Setup (keep your existing style) ===
   const btn = document.getElementById('runBtn');
   btn.disabled = true;
   btn.classList.add('loading');
   document.getElementById('btnSpin').style.display = 'block';
-  document.getElementById('btnText').textContent = 'Kevin is working...';
-
+  document.getElementById('btnText').textContent = 'Running…';
   setStatus('running');
 
   // Clear log
@@ -1182,65 +1176,29 @@ async function runAgent() {
   lp.innerHTML = '';
   const thinking = addThinking();
 
-  try {
-    // Show attached files (if any)
-    if (state.files && state.files.length > 0) {
-      addStep('success', `📎 ${state.files.length} file(s) attached`);
-      await delay(600);
+  // Build message content
+  const msgContent = [];
+
+  // Attach files
+  if (state.files.length > 0) {
+    for (const f of state.files) {
+      if (f.type.startsWith('image/')) {
+        msgContent.push({
+          type: 'image',
+          source: { type: 'base64', media_type: f.type, data: f.base64 }
+        });
+        msgContent.push({ type: 'text', text: `[Attached file: ${f.name}]` });
+      } else {
+        // text/code file — decode and send as text
+        let decoded = '';
+        try { decoded = atob(f.base64); } catch (e) { decoded = '(binary, could not decode)'; }
+        msgContent.push({
+          type: 'text',
+          text: `<attached_file name="${f.name}" type="${f.type}">\n${decoded}\n</attached_file>`
+        });
+      }
     }
-
-    // === Mock Agent Steps (Realistic flow) ===
-    addStep('thinking', 'Understanding the task...');
-    await delay(900);
-
-    addStep('thinking', `Task: "${task}"`);
-    await delay(1100);
-
-    addStep('thinking', 'Creating execution plan...');
-    await delay(1300);
-
-    addStep('success', '✅ Plan created');
-    await delay(800);
-
-    addStep('thinking', 'Executing steps...');
-    await delay(1600);
-
-    addStep('success', '✅ Task executed successfully');
-    await delay(900);
-
-    // Final nice result box
-    const resultHTML = `
-      <div style="background: #1a1a2e; padding: 18px; border-radius: 10px; margin: 15px 0; border-left: 5px solid #00ff9d;">
-        <strong>🎉 Kevin AI Result</strong><br><br>
-        <strong>Task:</strong> ${task}<br><br>
-        I have analyzed your request and completed the task successfully.<br><br>
-        <strong>Status:</strong> ✅ Completed<br>
-        <strong>Time taken:</strong> ~5.8 seconds<br>
-        <strong>Mode:</strong> Demo Mode (Mock)
-      </div>
-    `;
-    
-    lp.innerHTML += resultHTML;
-
-    setStatus('success');
-
-  } catch (err) {
-    addStep('error', 'An error occurred during execution.');
-    setStatus('error');
   }
-
-  // === Reset Button ===
-  btn.disabled = false;
-  btn.classList.remove('loading');
-  document.getElementById('btnSpin').style.display = 'none';
-  document.getElementById('btnText').textContent = '▶ Run agent';
-}
-
-// Helper delay function
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 
   msgContent.push({ type: 'text', text: task });
 

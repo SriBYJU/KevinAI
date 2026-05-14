@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --border: rgba(120,120,200,0.15);
+    --border2: rgba(120,120,200,0.3);
+    --accent: #7c6ff7;
+    --accent2: #a78bfa;
+    --accent3: #38d9b4;
+    --text: #e8e8f0;
+    --muted: #8888aa;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+    --red: #ff6b6b;
+    --yellow: #ffd93d;
+    --green: #6bcb77;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 0.5px solid var(--border);
+    background: rgba(10,10,15,0.9);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.1rem;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* SECTIONS */
+  section { padding: 4rem 2rem; }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(124,111,247,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 0.5px solid var(--border2);
+    background: var(--bg3);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    font-family: var(--mono);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.02em;
+  }
+  .hero-badge::before { content: '●'; color: var(--accent3); font-size: 8px; }
+  h1 {
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.2rem;
+  }
+  h1 .hl { color: var(--accent2); }
+  .hero-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+  }
+  .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* DEMO TERMINAL */
+  .demo-section {
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .demo-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .section-label {
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    color: var(--accent3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 2.5rem;
+  }
+  .terminal {
+    background: #0d0d14;
+    border: 0.5px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.75rem 1rem;
+    background: var(--bg3);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: var(--red); }
+  .dot.y { background: var(--yellow); }
+  .dot.g { background: var(--green); }
+  .terminal-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    margin-right: 26px;
+  }
+
+  .terminal-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 400px;
+  }
+  .t-left {
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+  }
+  .t-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .t-header .dot-sm { width: 6px; height: 6px; border-radius: 50%; background: var(--accent3); }
+
+  .task-input-area {
+    flex: 1;
+    padding: 1rem;
+  }
+  .task-input-area label {
+    display: block;
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.75rem;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+    height: 130px;
+  }
+  textarea:focus { border-color: var(--accent); }
+
+  .quick-tasks {
+    padding: 0 1rem 0.75rem;
+  }
+  .quick-label {
+    font-size: 0.65rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+  .quick-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .chip {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.68rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent2); }
+
+  .run-btn {
+    margin: 0.75rem 1rem 1rem;
+    width: calc(100% - 2rem);
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.65rem;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .run-btn:hover { opacity: 0.88; }
+  .run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .run-btn .spin {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .run-btn.loading .spin { display: block; }
+  .run-btn.loading .btn-text { opacity: 0.6; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .t-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .output-area {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 420px;
+  }
+  .output-placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-align: center;
+    gap: 8px;
+    opacity: 0.5;
+  }
+  .output-placeholder i { font-size: 24px; }
+
+  /* agent output */
+  .agent-step {
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .step-icon { color: var(--accent3); }
+  .step-type {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .step-type.think { color: var(--accent2); border-color: rgba(167,139,250,0.3); }
+  .step-type.code { color: var(--accent3); border-color: rgba(56,217,180,0.3); }
+  .step-type.done { color: var(--green); border-color: rgba(107,203,119,0.3); }
+  .step-type.plan { color: var(--yellow); border-color: rgba(255,217,61,0.3); }
+  .step-content {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .step-content.is-code {
+    color: var(--accent3);
+    background: rgba(56,217,180,0.04);
+    border-color: rgba(56,217,180,0.15);
+  }
+
+  /* cursor blink */
+  .cursor-blink::after {
+    content: '▌';
+    color: var(--accent);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:0 } }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .feat-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: border-color 0.2s;
+  }
+  .feat-card:hover { border-color: var(--border2); }
+  .feat-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent2);
+    font-size: 16px;
+    margin-bottom: 0.9rem;
+  }
+  .feat-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+  .feat-desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.55;
+    font-family: var(--mono);
+  }
+
+  /* HOW IT WORKS */
+  .hiw-section { background: var(--bg); }
+  .steps-list {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .step-item {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+    padding-bottom: 2rem;
+  }
+  .step-item:last-child { padding-bottom: 0; }
+  .step-item:last-child .step-line { display: none; }
+  .step-num-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 36px;
+  }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent2);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line {
+    flex: 1;
+    width: 0.5px;
+    background: var(--border);
+    margin-top: 6px;
+  }
+  .step-text { padding-top: 6px; }
+  .step-text h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .step-text p { font-size: 0.8rem; color: var(--muted); font-family: var(--mono); line-height: 1.55; }
+
+  /* FOOTER */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  footer span { color: var(--accent2); }
+
+  /* scroll to section */
+  .anchor { scroll-margin-top: 60px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Dev<span>AI</span></div>
+  <div class="nav-links">
+    <a onclick="scrollTo('demo')">Demo</a>
+    <a onclick="scrollTo('features')">Features</a>
+    <a onclick="scrollTo('hiw')">How it works</a>
+    <button class="nav-cta" onclick="scrollTo('demo')">Try free →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Powered by Claude · AI Coding Agent</div>
+  <h1>Your AI<br><span class="hl">Software Engineer</span></h1>
+  <p class="hero-sub">Describe a task. DevAI plans, writes code, debugs, and explains — just like a senior dev on your team.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="scrollTo('demo')">Launch the agent →</button>
+    <button class="btn-ghost" onclick="scrollTo('hiw')">See how it works</button>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section anchor" id="demo">
+  <div class="demo-wrap">
+    <div class="section-label">live demo</div>
+    <h2 class="section-title">The agent, in action</h2>
+    <p class="section-sub">Type a task — DevAI plans and codes it for you.</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="terminal-title">devai-agent — interactive session</div>
+      </div>
+      <div class="terminal-body">
+        <div class="t-left">
+          <div class="t-header">
+            <div class="dot-sm"></div>
+            Task input
+          </div>
+          <div class="task-input-area">
+            <label>Describe your coding task</label>
+            <textarea id="taskInput" placeholder="e.g. Build a REST API endpoint that validates user email and returns a JWT token..."></textarea>
+          </div>
+          <div class="quick-tasks">
+            <div class="quick-label">Quick tasks</div>
+            <div class="quick-chips">
+              <div class="chip" onclick="setTask('Build a React todo app with local storage')">React todo app</div>
+              <div class="chip" onclick="setTask('Write a Python web scraper for news headlines')">Python scraper</div>
+              <div class="chip" onclick="setTask('Create a REST API with Express and JWT auth')">Express + JWT</div>
+              <div class="chip" onclick="setTask('Debug: my sort algorithm returns wrong order')">Debug sort bug</div>
+              <div class="chip" onclick="setTask('Write SQL to find top 5 customers by revenue')">SQL query</div>
+              <div class="chip" onclick="setTask('Explain Big O notation with examples')">Explain Big O</div>
+            </div>
+          </div>
+          <button class="run-btn" id="runBtn" onclick="runAgent()">
+            <div class="spin" id="btnSpin"></div>
+            <span class="btn-text" id="btnText">▶ Run agent</span>
+          </button>
+        </div>
+
+        <div class="t-right">
+          <div class="t-header">
+            <div class="dot-sm"></div>
+            Agent output
+          </div>
+          <div class="output-area" id="outputArea">
+            <div class="output-placeholder" id="placeholder">
+              <i class="ti ti-terminal-2" aria-hidden="true"></i>
+              <div>Awaiting task…</div>
+              <div style="font-size:0.65rem;opacity:0.6">Enter a task and run the agent</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="anchor" id="features" style="background: var(--bg2); border-top: 0.5px solid var(--border);">
+  <div class="section-label">capabilities</div>
+  <h2 class="section-title">Everything a dev does</h2>
+  <p class="section-sub">DevAI handles the full software development loop.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-brain" aria-hidden="true"></i></div>
+      <div class="feat-title">Autonomous planning</div>
+      <p class="feat-desc">Breaks complex tasks into subtasks, reasons about dependencies, and builds a step-by-step plan.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-code" aria-hidden="true"></i></div>
+      <div class="feat-title">Full-stack coding</div>
+      <p class="feat-desc">Writes production-ready code in Python, JavaScript, TypeScript, SQL, Go, Rust, and more.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-bug" aria-hidden="true"></i></div>
+      <div class="feat-title">Debug & fix</div>
+      <p class="feat-desc">Identifies bugs, explains root causes, and applies targeted fixes with clear reasoning.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-file-description" aria-hidden="true"></i></div>
+      <div class="feat-title">Auto documentation</div>
+      <p class="feat-desc">Generates inline comments, README files, and API docs from your codebase.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-test-pipe" aria-hidden="true"></i></div>
+      <div class="feat-title">Test generation</div>
+      <p class="feat-desc">Writes unit and integration tests with edge cases you might have missed.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="ti ti-messages" aria-hidden="true"></i></div>
+      <div class="feat-title">Explain anything</div>
+      <p class="feat-desc">Explains algorithms, design patterns, and architectural decisions in plain English.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw-section anchor" id="hiw">
+  <div class="section-label">process</div>
+  <h2 class="section-title">How DevAI works</h2>
+  <p class="section-sub" style="margin-bottom:2.5rem">Four phases, one seamless loop.</p>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">01</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>You describe the task</h4>
+        <p>Plain English. No specs, no boilerplate. Just tell DevAI what you need.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">02</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>Agent plans the approach</h4>
+        <p>DevAI reasons about the problem, picks the right stack, and outlines the implementation steps.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">03</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>Code is written & verified</h4>
+        <p>The agent writes code, runs mental tests, catches edge cases, and refines until it's solid.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">04</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>You get a full explanation</h4>
+        <p>Every decision explained. You understand what was built and why — not just the output.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built with <span>Claude Sonnet 4</span> · DevAI — your AI software engineer
+</footer>
+
+<script>
+function scrollTo(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function setTask(text) {
+  document.getElementById('taskInput').value = text;
+  document.getElementById('taskInput').focus();
+}
+
+function parseAgentSteps(text) {
+  const steps = [];
+  const lines = text.split('\n');
+  let current = null;
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) continue;
+
+    if (trimmed.startsWith('**PLAN:**') || trimmed.startsWith('PLAN:') || trimmed.match(/^#+\s*(plan|planning)/i)) {
+      if (current) steps.push(current);
+      current = { type: 'plan', content: trimmed.replace(/^\*?\*?PLAN:\*?\*?|^#+\s*/i, '').trim() };
+    } else if (trimmed.startsWith('**THINKING:**') || trimmed.startsWith('THINKING:') || trimmed.match(/^#+\s*think/i)) {
+      if (current) steps.push(current);
+      current = { type: 'think', content: trimmed.replace(/^\*?\*?THINKING:\*?\*?|^#+\s*/i, '').trim() };
+    } else if (trimmed.startsWith('```') || trimmed.includes('def ') || trimmed.includes('function ') || trimmed.includes('const ') || trimmed.includes('class ') || trimmed.includes('import ') || trimmed.includes('SELECT ') || trimmed.includes('CREATE ')) {
+      if (current) steps.push(current);
+      current = { type: 'code', content: line };
+    } else if (trimmed.startsWith('**RESULT:**') || trimmed.startsWith('RESULT:') || trimmed.match(/^#+\s*result/i)) {
+      if (current) steps.push(current);
+      current = { type: 'done', content: trimmed.replace(/^\*?\*?RESULT:\*?\*?|^#+\s*/i, '').trim() };
+    } else {
+      if (current) {
+        current.content += '\n' + line;
+      } else {
+        current = { type: 'think', content: line };
+      }
+    }
+  }
+  if (current) steps.push(current);
+  return steps.length > 0 ? steps : [{ type: 'done', content: text }];
+}
+
+async function runAgent() {
+  const task = document.getElementById('taskInput').value.trim();
+  if (!task) return;
+
+  const btn = document.getElementById('runBtn');
+  const spin = document.getElementById('btnSpin');
+  const btnText = document.getElementById('btnText');
+  const output = document.getElementById('outputArea');
+  const placeholder = document.getElementById('placeholder');
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+  spin.style.display = 'block';
+  btnText.textContent = 'Running…';
+
+  if (placeholder) placeholder.remove();
+  output.innerHTML = '';
+
+  // Show thinking indicator
+  const thinkStep = document.createElement('div');
+  thinkStep.className = 'agent-step';
+  thinkStep.innerHTML = `
+    <div class="step-header">
+      <span class="step-icon">⟳</span>
+      <span class="step-type think">thinking</span>
+    </div>
+    <div class="step-content cursor-blink">DevAI is analyzing your task…</div>
+  `;
+  output.appendChild(thinkStep);
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are DevAI, an autonomous AI software engineer similar to Devin. When given a coding task, respond in clearly structured sections:
+
+PLAN: (your step-by-step approach, 2-3 sentences)
+
+THINKING: (your reasoning about the best approach, edge cases, tech choices)
+
+Then write the actual code (properly formatted with code blocks).
+
+RESULT: (brief summary of what was built and any important notes)
+
+Be concrete, technical, and write real working code. Keep total response focused and useful.`,
+        messages: [{ role: 'user', content: task }]
+      })
+    });
+
+    const data = await response.json();
+    const fullText = data.content?.map(b => b.text || '').join('') || '';
+
+    // Clear thinking step
+    output.innerHTML = '';
+
+    // Parse and render steps
+    const steps = parseAgentSteps(fullText);
+
+    for (let i = 0; i < steps.length; i++) {
+      const s = steps[i];
+      await new Promise(r => setTimeout(r, i * 120));
+
+      const el = document.createElement('div');
+      el.className = 'agent-step';
+
+      const icons = { think: '◈', plan: '◆', code: '⟨⟩', done: '✓' };
+      const labels = { think: 'reasoning', plan: 'planning', code: 'code', done: 'result' };
+
+      const isCode = s.type === 'code' || s.content.includes('```') || s.content.includes('def ') || s.content.includes('function ') || s.content.includes('const ');
+
+      el.innerHTML = `
+        <div class="step-header">
+          <span class="step-icon">${icons[s.type] || '◈'}</span>
+          <span class="step-type ${s.type}">${labels[s.type] || s.type}</span>
+        </div>
+        <div class="step-content${isCode ? ' is-code' : ''}">${escHtml(s.content.trim())}</div>
+      `;
+      output.appendChild(el);
+      output.scrollTop = output.scrollHeight;
+    }
+
+  } catch (err) {
+    output.innerHTML = '';
+    const el = document.createElement('div');
+    el.className = 'agent-step';
+    el.innerHTML = `<div class="step-header"><span class="step-type" style="color:var(--red)">error</span></div><div class="step-content" style="color:var(--red)">Agent error: ${escHtml(String(err))}</div>`;
+    output.appendChild(el);
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  spin.style.display = 'none';
+  btnText.textContent = '▶ Run agent';
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

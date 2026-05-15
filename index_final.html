@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevAI — AI Coding Agent</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #08080e;
+    --bg2: #0f0f18;
+    --bg3: #16161f;
+    --bg4: #1d1d28;
+    --border: rgba(120,120,200,0.12);
+    --border2: rgba(120,120,200,0.28);
+    --border3: rgba(120,120,200,0.45);
+    --accent: #7c6ff7;
+    --accent2: #a78bfa;
+    --accent3: #38d9b4;
+    --text: #e8e8f0;
+    --muted: #7777aa;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+    --red: #ff6b6b;
+    --yellow: #ffd93d;
+    --green: #6bcb77;
+    --orange: #ff9f43;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.75rem;
+    border-bottom: 0.5px solid var(--border);
+    background: rgba(8,8,14,0.95);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    backdrop-filter: blur(12px);
+  }
+  .nav-logo { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.03em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    color: var(--accent3);
+    background: rgba(56,217,180,0.08);
+    border: 0.5px solid rgba(56,217,180,0.25);
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.45rem 1rem;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 5.5rem 2rem 4.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 350px;
+    background: radial-gradient(ellipse, rgba(124,111,247,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 0.5px solid var(--border2);
+    background: var(--bg3);
+    padding: 5px 13px;
+    border-radius: 20px;
+    font-size: 0.73rem;
+    color: var(--accent2);
+    font-family: var(--mono);
+    margin-bottom: 1.6rem;
+    letter-spacing: 0.03em;
+  }
+  .hero-badge::before { content: '●'; color: var(--accent3); font-size: 7px; }
+  h1 {
+    font-size: clamp(2.4rem, 5.5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+    margin-bottom: 1.3rem;
+  }
+  h1 .hl { color: var(--accent2); }
+  .hero-sub {
+    font-size: 0.83rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 2.2rem;
+    line-height: 1.65;
+    font-family: var(--mono);
+  }
+  .hero-btns { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent2); }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    text-align: center;
+    font-size: 0.72rem;
+    font-family: var(--mono);
+    color: var(--accent3);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    text-align: center;
+    font-size: 1.85rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+  .section-sub {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── DEMO SECTION ── */
+  .demo-section {
+    padding: 4rem 1.5rem;
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .demo-wrap { max-width: 1100px; margin: 0 auto; }
+
+  /* ── DEVIN-STYLE WORKSPACE ── */
+  .workspace {
+    background: #0a0a12;
+    border: 0.5px solid var(--border2);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 620px;
+  }
+
+  /* title bar */
+  .ws-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.65rem 1rem;
+    background: var(--bg3);
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+  .ws-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.7rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    margin-right: 26px;
+  }
+  .ws-status {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-right: 4px;
+  }
+  .ws-status.idle { color: var(--muted); background: rgba(120,120,180,0.08); border: 0.5px solid var(--border); }
+  .ws-status.running { color: var(--accent3); background: rgba(56,217,180,0.08); border: 0.5px solid rgba(56,217,180,0.3); }
+  .ws-status.done { color: var(--green); background: rgba(107,203,119,0.08); border: 0.5px solid rgba(107,203,119,0.3); }
+  .ws-status.error { color: var(--red); background: rgba(255,107,107,0.08); border: 0.5px solid rgba(255,107,107,0.3); }
+
+  /* main panes */
+  .ws-body {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* LEFT PANEL */
+  .ws-left {
+    border-right: 0.5px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+    overflow: hidden;
+  }
+
+  /* Tabs */
+  .ws-tabs {
+    display: flex;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+  }
+  .ws-tab {
+    flex: 1;
+    padding: 0.55rem 0;
+    font-size: 0.65rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid transparent;
+  }
+  .ws-tab:hover { color: var(--text); }
+  .ws-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+
+  .tab-panel { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+  .tab-panel.active { display: flex; }
+
+  /* Task tab */
+  .task-panel { padding: 0.85rem; flex-direction: column; gap: 0.65rem; overflow-y: auto; }
+  .field-label {
+    font-size: 0.62rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+  textarea.task-inp {
+    width: 100%;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    padding: 0.65rem 0.75rem;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+    transition: border-color 0.2s;
+    height: 100px;
+  }
+  textarea.task-inp:focus { border-color: var(--accent); }
+
+  .quick-label {
+    font-size: 0.6rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+  }
+  .quick-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+  .chip {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 0.64rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent2); }
+
+  .run-btn {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.6rem;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    flex-shrink: 0;
+  }
+  .run-btn:hover:not(:disabled) { opacity: 0.88; }
+  .run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .spin {
+    width: 13px; height: 13px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  .run-btn.loading .spin { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Files tab */
+  .files-panel { padding: 0.75rem; flex-direction: column; gap: 0.6rem; overflow-y: auto; }
+
+  .upload-zone {
+    border: 1.5px dashed var(--border2);
+    border-radius: 8px;
+    padding: 1.2rem 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg3);
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(124,111,247,0.06);
+  }
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-icon { font-size: 1.4rem; color: var(--accent2); margin-bottom: 0.4rem; opacity: 0.7; }
+  .upload-text { font-size: 0.7rem; font-family: var(--mono); color: var(--muted); line-height: 1.5; }
+  .upload-text strong { color: var(--accent2); }
+
+  .file-list { display: flex; flex-direction: column; gap: 5px; }
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.5rem 0.65rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .file-item:hover { border-color: var(--border2); }
+  .file-item.selected { border-color: var(--accent); background: rgba(124,111,247,0.06); }
+  .file-icon { font-size: 0.85rem; width: 16px; text-align: center; }
+  .file-name { font-family: var(--mono); font-size: 0.68rem; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-size { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); }
+  .file-remove {
+    width: 16px; height: 16px;
+    border-radius: 3px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .file-remove:hover { color: var(--red); background: rgba(255,107,107,0.1); }
+
+  .file-action-note {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    color: var(--accent3);
+    background: rgba(56,217,180,0.06);
+    border: 0.5px solid rgba(56,217,180,0.18);
+    border-radius: 5px;
+    padding: 0.5rem 0.65rem;
+    line-height: 1.5;
+  }
+
+  /* RIGHT PANEL — output */
+  .ws-right {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .output-tabs {
+    display: flex;
+    align-items: center;
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg2);
+    flex-shrink: 0;
+    padding: 0 0.75rem;
+    gap: 0;
+  }
+  .out-tab {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.65rem;
+    font-family: var(--mono);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+    border-bottom: 1.5px solid transparent;
+    text-transform: uppercase;
+  }
+  .out-tab:hover { color: var(--text); }
+  .out-tab.active { color: var(--accent2); border-bottom-color: var(--accent); }
+  .out-tab-spacer { flex: 1; }
+
+  .download-btn {
+    display: none;
+    align-items: center;
+    gap: 5px;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    border-radius: 5px;
+    padding: 0.3rem 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent3);
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-left: 0.5rem;
+  }
+  .download-btn:hover { border-color: var(--accent3); background: rgba(56,217,180,0.08); }
+  .download-btn.visible { display: flex; }
+
+  .output-pane { display: none; flex: 1; overflow-y: auto; padding: 0.9rem; }
+  .output-pane.active { display: block; }
+
+  /* Agent log */
+  .output-placeholder {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.73rem;
+    text-align: center;
+    gap: 9px;
+    opacity: 0.5;
+    min-height: 200px;
+  }
+  .output-placeholder i { font-size: 22px; }
+
+  .agent-step {
+    margin-bottom: 0.9rem;
+    animation: fadeUp 0.28s ease;
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    color: var(--muted);
+  }
+  .step-icon { color: var(--accent3); font-size: 0.75rem; }
+  .step-badge {
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border: 0.5px solid;
+  }
+  .step-badge.think { color: var(--accent2); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+  .step-badge.plan { color: var(--yellow); border-color: rgba(255,217,61,0.3); background: rgba(255,217,61,0.04); }
+  .step-badge.code { color: var(--accent3); border-color: rgba(56,217,180,0.3); background: rgba(56,217,180,0.04); }
+  .step-badge.result { color: var(--green); border-color: rgba(107,203,119,0.3); background: rgba(107,203,119,0.06); }
+  .step-badge.file { color: var(--orange); border-color: rgba(255,159,67,0.3); background: rgba(255,159,67,0.04); }
+  .step-badge.error { color: var(--red); border-color: rgba(255,107,107,0.3); background: rgba(255,107,107,0.06); }
+  .step-content {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    line-height: 1.65;
+    color: var(--text);
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .step-content.code-block {
+    color: var(--accent3);
+    background: rgba(56,217,180,0.03);
+    border-color: rgba(56,217,180,0.14);
+  }
+
+  /* cursor blink */
+  .cursor-blink::after { content: '▌'; color: var(--accent); animation: blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{ opacity:1 } 50%{ opacity:0 } }
+
+  /* File preview pane */
+  #previewPane {
+    display: none;
+  }
+  #previewPane.active { display: block; }
+  .preview-placeholder {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; min-height: 200px; gap: 8px;
+    color: var(--muted); font-family: var(--mono); font-size: 0.73rem; text-align: center; opacity: 0.5;
+  }
+  .preview-image {
+    max-width: 100%; max-height: 420px; border-radius: 6px;
+    border: 0.5px solid var(--border2); display: block; margin: 0 auto;
+  }
+  .preview-code {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--accent3);
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  .preview-label {
+    font-family: var(--mono); font-size: 0.62rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+  }
+
+  /* Edited output pane */
+  #editedPane { display: none; }
+  #editedPane.active { display: block; }
+  .edited-content {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text);
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 460px;
+    overflow-y: auto;
+  }
+
+  /* ── FEATURES ── */
+  section.features { padding: 4rem 2rem; background: var(--bg2); border-top: 0.5px solid var(--border); }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .feat-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+  .feat-card:hover { border-color: var(--border2); }
+  .feat-icon {
+    width: 34px; height: 34px;
+    border-radius: 7px;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent2);
+    font-size: 14px;
+    margin-bottom: 0.85rem;
+  }
+  .feat-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.4rem; letter-spacing: -0.01em; }
+  .feat-desc { font-size: 0.75rem; color: var(--muted); line-height: 1.55; font-family: var(--mono); }
+
+  /* ── HOW IT WORKS ── */
+  section.hiw { padding: 4rem 2rem; background: var(--bg); }
+  .steps-list { max-width: 580px; margin: 0 auto; display: flex; flex-direction: column; }
+  .step-item { display: flex; gap: 1rem; padding-bottom: 2rem; }
+  .step-item:last-child { padding-bottom: 0; }
+  .step-item:last-child .step-line { display: none; }
+  .step-num-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 36px; }
+  .step-num {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 0.5px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent2);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line { flex: 1; width: 0.5px; background: var(--border); margin-top: 6px; }
+  .step-text { padding-top: 6px; }
+  .step-text h4 { font-size: 0.93rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .step-text p { font-size: 0.78rem; color: var(--muted); font-family: var(--mono); line-height: 1.55; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 1.75rem 2rem;
+    text-align: center;
+    font-size: 0.73rem;
+    font-family: var(--mono);
+    color: var(--muted);
+  }
+  footer span { color: var(--accent2); }
+
+  .anchor { scroll-margin-top: 58px; }
+  /* scrollbars */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border3); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Dev<span>AI</span><span class="nav-badge">v2</span></div>
+  <div class="nav-links">
+    <a onclick="smoothScroll('demo')">Demo</a>
+    <a onclick="smoothScroll('features')">Features</a>
+    <a onclick="smoothScroll('hiw')">How it works</a>
+    <button class="nav-cta" onclick="smoothScroll('demo')">Try free →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Powered by Claude · AI Coding Agent</div>
+  <h1>Your AI<br><span class="hl">Software Engineer</span></h1>
+  <p class="hero-sub">Describe a task. Upload files. DevAI plans, writes, edits, and explains — just like a senior dev on your team.</p>
+  <div class="hero-btns">
+    <button class="btn-primary" onclick="smoothScroll('demo')">Launch the agent →</button>
+    <button class="btn-ghost" onclick="smoothScroll('hiw')">See how it works</button>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section anchor" id="demo">
+  <div class="demo-wrap">
+    <div class="section-label">live demo</div>
+    <h2 class="section-title">The agent, in action</h2>
+    <p class="section-sub">Type a task, upload files — DevAI analyzes, edits, and returns the result.</p>
+
+    <div class="workspace">
+      <!-- Title bar -->
+      <div class="ws-titlebar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="ws-title">devai-agent — interactive session</div>
+        <span class="ws-status idle" id="agentStatus">● idle</span>
+      </div>
+
+      <!-- Body -->
+      <div class="ws-body">
+
+        <!-- LEFT: tabs -->
+        <div class="ws-left">
+          <div class="ws-tabs">
+            <div class="ws-tab active" onclick="switchLeftTab('task', this)">Task</div>
+            <div class="ws-tab" onclick="switchLeftTab('files', this)">Files</div>
+          </div>
+
+          <!-- Task Tab -->
+          <div class="tab-panel active task-panel" id="tab-task">
+            <div>
+              <div class="field-label">Describe your task</div>
+              <textarea class="task-inp" id="taskInput" placeholder="e.g. Add a dark mode toggle to this HTML file...&#10;&#10;Or ask me to edit an uploaded file!"></textarea>
+            </div>
+            <div>
+              <div class="quick-label">Quick tasks</div>
+              <div class="quick-chips">
+                <div class="chip" onclick="setTask('Build a React todo app with local storage')">React todo</div>
+                <div class="chip" onclick="setTask('Write a Python web scraper for news headlines')">Python scraper</div>
+                <div class="chip" onclick="setTask('Create a REST API with Express and JWT auth')">Express + JWT</div>
+                <div class="chip" onclick="setTask('Debug: my sort algorithm returns wrong order')">Debug sort</div>
+                <div class="chip" onclick="setTask('Write SQL to find top 5 customers by revenue')">SQL query</div>
+                <div class="chip" onclick="setTask('Add dark mode toggle to my uploaded HTML file')">Dark mode</div>
+                <div class="chip" onclick="setTask('Analyze this image and describe what you see in detail')">Analyze image</div>
+              </div>
+            </div>
+            <button class="run-btn" id="runBtn" onclick="runAgent()">
+              <div class="spin" id="btnSpin"></div>
+              <span id="btnText">▶ Run agent</span>
+            </button>
+          </div>
+
+          <!-- Files Tab -->
+          <div class="tab-panel files-panel" id="tab-files">
+            <div>
+              <div class="field-label">Upload files</div>
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" id="fileInput" multiple accept="image/*,.html,.htm,.css,.js,.ts,.py,.txt,.json,.md,.jsx,.tsx,.csv" onchange="handleFiles(this.files)">
+                <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <div class="upload-text"><strong>Click or drag files here</strong><br>Images, HTML, CSS, JS, Python, TXT, JSON…</div>
+              </div>
+            </div>
+            <div class="file-action-note" id="fileNote" style="display:none">
+              <i class="fa-solid fa-circle-info"></i> File loaded. Switch to Task tab and tell DevAI what to do with it — e.g. "edit my uploaded HTML file to add…"
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT: output -->
+        <div class="ws-right">
+          <div class="output-tabs">
+            <div class="out-tab active" onclick="switchOutTab('log', this)">Agent Log</div>
+            <div class="out-tab" onclick="switchOutTab('preview', this)" id="previewTab" style="display:none">File Preview</div>
+            <div class="out-tab" onclick="switchOutTab('edited', this)" id="editedTab" style="display:none">Edited File</div>
+            <div class="out-tab-spacer"></div>
+            <button class="download-btn" id="downloadBtn" onclick="downloadEdited()">
+              <i class="fa-solid fa-download"></i> Download
+            </button>
+          </div>
+
+          <div class="output-pane active" id="logPane">
+            <div class="output-placeholder" id="logPlaceholder">
+              <i class="fa-solid fa-terminal"></i>
+              <div>Awaiting task…</div>
+              <div style="font-size:0.62rem;opacity:0.7">Enter a task (and optionally upload a file) then run the agent</div>
+            </div>
+          </div>
+
+          <div class="output-pane" id="previewPane">
+            <div class="preview-placeholder" id="previewPlaceholder">
+              <i class="fa-regular fa-file-image" style="font-size:22px"></i>
+              <div>No file selected</div>
+            </div>
+          </div>
+
+          <div class="output-pane" id="editedPane">
+            <div class="preview-placeholder" id="editedPlaceholder">
+              <i class="fa-solid fa-wand-magic-sparkles" style="font-size:22px"></i>
+              <div>Edited file will appear here</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features anchor" id="features">
+  <div class="section-label">capabilities</div>
+  <h2 class="section-title">Everything a dev does</h2>
+  <p class="section-sub">DevAI handles the full software development loop.</p>
+  <div class="features-grid">
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="feat-title">Autonomous planning</div>
+      <p class="feat-desc">Breaks complex tasks into subtasks, reasons about dependencies, and builds a step-by-step plan.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-code"></i></div>
+      <div class="feat-title">Full-stack coding</div>
+      <p class="feat-desc">Writes production-ready code in Python, JavaScript, TypeScript, SQL, Go, Rust, and more.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
+      <div class="feat-title">File editing</div>
+      <p class="feat-desc">Upload HTML, CSS, JS, images or any file. DevAI reads it, edits it, and returns the modified version.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-bug"></i></div>
+      <div class="feat-title">Debug & fix</div>
+      <p class="feat-desc">Identifies bugs, explains root causes, and applies targeted fixes with clear reasoning.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-file-lines"></i></div>
+      <div class="feat-title">Auto documentation</div>
+      <p class="feat-desc">Generates inline comments, README files, and API docs from your codebase.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-image"></i></div>
+      <div class="feat-title">Image analysis</div>
+      <p class="feat-desc">Upload screenshots, diagrams, or mockups. DevAI describes, analyzes, and acts on what it sees.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw anchor" id="hiw">
+  <div class="section-label">process</div>
+  <h2 class="section-title">How DevAI works</h2>
+  <p class="section-sub" style="margin-bottom:2.5rem">Four phases, one seamless loop.</p>
+  <div class="steps-list">
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">01</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>You describe the task</h4>
+        <p>Plain English. Optionally upload a file. No specs, no boilerplate.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">02</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>Agent reads your files</h4>
+        <p>DevAI reads uploaded images, code, or documents and understands the full context.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">03</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>Code is written & verified</h4>
+        <p>The agent plans, writes, and refines. If editing a file, it returns the complete modified version.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num-wrap"><div class="step-num">04</div><div class="step-line"></div></div>
+      <div class="step-text">
+        <h4>Download the result</h4>
+        <p>View the edited file in-browser and download it with one click.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built with <span>Claude Sonnet 4</span> · DevAI — your AI software engineer
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const state = {
+  files: [],          // { name, type, size, base64, dataUrl }
+  editedContent: '',
+  editedFilename: '',
+  editedMime: '',
+};
+
+// ─────────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────────
+function smoothScroll(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function switchLeftTab(id, el) {
+  document.querySelectorAll('.ws-tabs .ws-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function switchOutTab(id, el) {
+  document.querySelectorAll('.out-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.output-pane').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(id + 'Pane').classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// QUICK TASK
+// ─────────────────────────────────────────────
+function setTask(text) {
+  document.getElementById('taskInput').value = text;
+  document.getElementById('taskInput').focus();
+  switchLeftTab('task', document.querySelector('.ws-tab'));
+}
+
+// ─────────────────────────────────────────────
+// FILE HANDLING
+// ─────────────────────────────────────────────
+function handleFiles(files) {
+  Array.from(files).forEach(f => loadFile(f));
+}
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    const base64 = dataUrl.split(',')[1];
+    const existing = state.files.findIndex(f => f.name === file.name);
+    const entry = { name: file.name, type: file.type, size: file.size, base64, dataUrl };
+    if (existing >= 0) state.files[existing] = entry;
+    else state.files.push(entry);
+    renderFileList();
+    showFileNote();
+    // Auto-preview if image or code
+    previewFile(entry);
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = '';
+  state.files.forEach((f, i) => {
+    const icon = getFileIcon(f.type, f.name);
+    const size = formatSize(f.size);
+    const el = document.createElement('div');
+    el.className = 'file-item';
+    el.innerHTML = `
+      <span class="file-icon">${icon}</span>
+      <span class="file-name" title="${esc(f.name)}">${esc(f.name)}</span>
+      <span class="file-size">${size}</span>
+      <button class="file-remove" onclick="removeFile(${i}, event)" title="Remove">✕</button>
+    `;
+    el.onclick = () => { previewFile(f); showOutTab('preview'); };
+    list.appendChild(el);
+  });
+}
+
+function removeFile(i, e) {
+  e.stopPropagation();
+  state.files.splice(i, 1);
+  renderFileList();
+  if (state.files.length === 0) document.getElementById('fileNote').style.display = 'none';
+}
+
+function showFileNote() {
+  document.getElementById('fileNote').style.display = 'block';
+}
+
+function getFileIcon(type, name) {
+  if (type.startsWith('image/')) return '🖼️';
+  const ext = name.split('.').pop().toLowerCase();
+  const map = { html: '🌐', htm: '🌐', css: '🎨', js: '⚡', ts: '⚡', py: '🐍', json: '📋', md: '📝', txt: '📄', jsx: '⚛️', tsx: '⚛️', csv: '📊' };
+  return map[ext] || '📄';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + 'B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + 'KB';
+  return (bytes / 1048576).toFixed(1) + 'MB';
+}
+
+// ─────────────────────────────────────────────
+// FILE PREVIEW
+// ─────────────────────────────────────────────
+function previewFile(f) {
+  const pane = document.getElementById('previewPane');
+  document.getElementById('previewTab').style.display = 'block';
+  pane.innerHTML = '';
+
+  if (f.type.startsWith('image/')) {
+    const label = document.createElement('div');
+    label.className = 'preview-label';
+    label.textContent = f.name;
+    const img = document.createElement('img');
+    img.src = f.dataUrl;
+    img.className = 'preview-image';
+    pane.appendChild(label);
+    pane.appendChild(img);
+  } else {
+    // decode text
+    const text = atob(f.base64);
+    const label = document.createElement('div');
+    label.className = 'preview-label';
+    label.textContent = f.name + ' — ' + formatSize(f.size);
+    const pre = document.createElement('pre');
+    pre.className = 'preview-code';
+    pre.textContent = text.slice(0, 8000) + (text.length > 8000 ? '\n… (truncated)' : '');
+    pane.appendChild(label);
+    pane.appendChild(pre);
+  }
+}
+
+function showOutTab(id) {
+  const tabs = { log: 0, preview: 1, edited: 2 };
+  const tabEls = document.querySelectorAll('.out-tab');
+  const paneEls = document.querySelectorAll('.output-pane');
+  tabEls.forEach(t => t.classList.remove('active'));
+  paneEls.forEach(p => p.classList.remove('active'));
+
+  const idx = tabs[id];
+  if (tabEls[idx]) tabEls[idx].classList.add('active');
+  document.getElementById(id + 'Pane').classList.add('active');
+}
+
+// ─────────────────────────────────────────────
+// AGENT STATUS
+// ─────────────────────────────────────────────
+function setStatus(s) {
+  const el = document.getElementById('agentStatus');
+  el.className = 'ws-status ' + s;
+  const labels = { idle: '● idle', running: '● running', done: '● done', error: '● error' };
+  el.textContent = labels[s] || s;
+}
+
+// ─────────────────────────────────────────────
+// OUTPUT HELPERS
+// ─────────────────────────────────────────────
+function logPane() { return document.getElementById('logPane'); }
+
+function addStep(type, content, isCode = false) {
+  const icons = { think: '◈', plan: '◆', code: '⟨⟩', result: '✓', file: '📎', error: '✗' };
+  const el = document.createElement('div');
+  el.className = 'agent-step';
+  el.innerHTML = `
+    <div class="step-header">
+      <span class="step-icon">${icons[type] || '◈'}</span>
+      <span class="step-badge ${type}">${type}</span>
+    </div>
+    <div class="step-content${isCode ? ' code-block' : ''}">${esc(content.trim())}</div>
+  `;
+  logPane().appendChild(el);
+  logPane().scrollTop = logPane().scrollHeight;
+  return el;
+}
+
+function addThinking() {
+  const el = document.createElement('div');
+  el.className = 'agent-step';
+  el.innerHTML = `
+    <div class="step-header"><span class="step-icon">◈</span><span class="step-badge think">thinking</span></div>
+    <div class="step-content cursor-blink">DevAI is analyzing your task…</div>
+  `;
+  logPane().appendChild(el);
+  logPane().scrollTop = logPane().scrollHeight;
+  return el;
+}
+
+// ─────────────────────────────────────────────
+// PARSE AGENT RESPONSE
+// ─────────────────────────────────────────────
+function parseSteps(text) {
+  const steps = [];
+  const lines = text.split('\n');
+  let current = null;
+  let inFence = false;
+
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t && !inFence) { if (current) { steps.push(current); current = null; } continue; }
+
+    // code fences
+    if (t.startsWith('```')) {
+      if (!inFence) {
+        if (current) steps.push(current);
+        current = { type: 'code', content: line };
+        inFence = true;
+      } else {
+        current.content += '\n' + line;
+        steps.push(current);
+        current = null;
+        inFence = false;
+      }
+      continue;
+    }
+    if (inFence) { current.content += '\n' + line; continue; }
+
+    if (/^(PLAN:|##\s*plan)/i.test(t)) {
+      if (current) steps.push(current);
+      current = { type: 'plan', content: t.replace(/^(PLAN:|##\s*plan\s*)/i, '').trim() };
+    } else if (/^(THINKING:|##\s*think)/i.test(t)) {
+      if (current) steps.push(current);
+      current = { type: 'think', content: t.replace(/^(THINKING:|##\s*think\s*)/i, '').trim() };
+    } else if (/^(RESULT:|##\s*result)/i.test(t)) {
+      if (current) steps.push(current);
+      current = { type: 'result', content: t.replace(/^(RESULT:|##\s*result\s*)/i, '').trim() };
+    } else {
+      if (current) current.content += '\n' + line;
+      else current = { type: 'think', content: line };
+    }
+  }
+  if (current) steps.push(current);
+  return steps.length ? steps : [{ type: 'result', content: text }];
+}
+
+// Extract code block(s) from full response text
+function extractCode(text) {
+  const matches = [];
+  const re = /```(?:\w+)?\n?([\s\S]*?)```/g;
+  let m;
+  while ((m = re.exec(text)) !== null) matches.push(m[1]);
+  return matches.join('\n\n');
+}
+
+// ─────────────────────────────────────────────
+// DOWNLOAD
+// ─────────────────────────────────────────────
+function downloadEdited() {
+  if (!state.editedContent) return;
+  const blob = new Blob([state.editedContent], { type: state.editedMime || 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = state.editedFilename || 'devai_output.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─────────────────────────────────────────────
+// RUN AGENT
+// ─────────────────────────────────────────────
+// ── SET THIS to your Cloudflare Worker URL after deploying ──
+const WORKER_URL = 'https://kai.avadhanula-shriyan.workers.dev/';
+
+async function runAgent() {
+  const task = document.getElementById('taskInput').value.trim();
+  if (!task) { document.getElementById('taskInput').focus(); return; }
+
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  document.getElementById('btnSpin').style.display = 'block';
+  document.getElementById('btnText').textContent = 'Running…';
+  setStatus('running');
+
+  // Clear log
+  const lp = logPane();
+  lp.innerHTML = '';
+  const thinking = addThinking();
+
+  // Build message content
+  const msgContent = [];
+
+  // Attach files
+  if (state.files.length > 0) {
+    for (const f of state.files) {
+      if (f.type.startsWith('image/')) {
+        msgContent.push({
+          type: 'image',
+          source: { type: 'base64', media_type: f.type, data: f.base64 }
+        });
+        msgContent.push({ type: 'text', text: `[Attached file: ${f.name}]` });
+      } else {
+        // text/code file — decode and send as text
+        let decoded = '';
+        try { decoded = atob(f.base64); } catch (e) { decoded = '(binary, could not decode)'; }
+        msgContent.push({
+          type: 'text',
+          text: `<attached_file name="${f.name}" type="${f.type}">\n${decoded}\n</attached_file>`
+        });
+      }
+    }
+  }
+
+  msgContent.push({ type: 'text', text: task });
+
+  const hasFiles = state.files.length > 0;
+  const isEditTask = hasFiles && /edit|modify|change|add|remove|update|fix|refactor|convert|transform|improve|rewrite/i.test(task);
+  const isImageTask = hasFiles && state.files.some(f => f.type.startsWith('image/'));
+
+  const systemPrompt = `You are DevAI, an autonomous AI software engineer similar to Devin. Structure all responses clearly:
+
+PLAN: (2-3 sentence step-by-step approach)
+
+THINKING: (reasoning, edge cases, tech choices)
+
+Then write code in proper fenced code blocks (\`\`\`language ... \`\`\`).
+
+RESULT: (summary of what was built and key notes)
+
+${isEditTask ? `IMPORTANT: The user has uploaded a file and wants you to edit it. After your PLAN and THINKING sections, output the COMPLETE edited file content inside a single fenced code block. Do not truncate or summarize — output the full file so it can be downloaded.` : ''}
+${isImageTask && !isEditTask ? `The user has uploaded an image. Analyze it thoroughly and describe what you see. Then address their task.` : ''}
+
+Be concrete, technical, and write real working code.`;
+
+  try {
+    const response = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4096,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: msgContent }]
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(`API error ${response.status}: ${err.error?.message || response.statusText}`);
+    }
+
+    const data = await response.json();
+    const fullText = (data.content || []).map(b => b.text || '').join('');
+
+    thinking.remove();
+
+    const steps = parseSteps(fullText);
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise(r => setTimeout(r, i * 80));
+      const s = steps[i];
+      addStep(s.type, s.content, s.type === 'code');
+    }
+
+    // Handle edited file output
+    if (isEditTask) {
+      const code = extractCode(fullText);
+      if (code) {
+        const srcFile = state.files[0];
+        state.editedContent = code;
+        state.editedFilename = 'edited_' + srcFile.name;
+        state.editedMime = srcFile.type || 'text/plain';
+
+        // Show in edited pane
+        document.getElementById('editedTab').style.display = 'block';
+        const ep = document.getElementById('editedPane');
+        ep.innerHTML = '';
+        const label = document.createElement('div');
+        label.className = 'preview-label';
+        label.textContent = state.editedFilename + ' — ready to download';
+        label.style.marginBottom = '0.5rem';
+        const pre = document.createElement('pre');
+        pre.className = 'edited-content';
+        pre.textContent = code;
+        ep.appendChild(label);
+        ep.appendChild(pre);
+
+        document.getElementById('downloadBtn').classList.add('visible');
+
+        addStep('file', `Edited file ready: ${state.editedFilename}\nClick "Edited File" tab or the Download button to save it.`);
+        showOutTab('edited');
+      }
+    }
+
+    setStatus('done');
+  } catch (err) {
+    thinking.remove();
+    addStep('error', 'Agent error: ' + String(err));
+    setStatus('error');
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  document.getElementById('btnSpin').style.display = 'none';
+  document.getElementById('btnText').textContent = '▶ Run agent';
+}
+
+// ─────────────────────────────────────────────
+// DRAG & DROP on upload zone
+// ─────────────────────────────────────────────
+const zone = document.getElementById('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+
+// ─────────────────────────────────────────────
+// UTIL
+// ─────────────────────────────────────────────
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+
+</script>
+</body>
+</html>

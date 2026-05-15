@@ -1,0 +1,14 @@
+{
+  "name": "devai-server",
+  "version": "1.0.0",
+  "description": "DevAI – AI coding agent with Anthropic proxy",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0"
+  }
+}

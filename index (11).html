@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KevinAI — AI Software Engineer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+[data-theme="dark"]{
+  --bg:#08080f;--bg2:#0e0e18;--bg3:#14141f;--bg4:#1a1a28;--bg5:#20202e;
+  --card:#14141f;--card2:#1a1a28;
+  --border:rgba(120,110,220,0.11);--border2:rgba(120,110,220,0.22);--border3:rgba(120,110,220,0.38);
+  --accent:#7c6ff7;--accent2:#a78bfa;--accent3:#34d9b3;--accent4:#f97316;
+  --text:#f0f0f8;--text2:#a0a0c0;--muted:#5a5a88;
+  --red:#ff6b6b;--yellow:#fbbf24;--green:#4ade80;--orange:#fb923c;
+  --glow:rgba(124,111,247,0.15);--glow2:rgba(124,111,247,0.08);
+  --nav-bg:rgba(8,8,15,0.85);
+  --shadow:0 4px 32px rgba(0,0,0,0.5);--shadow2:0 8px 48px rgba(0,0,0,0.6);
+  --code-bg:#0d1117;
+}
+[data-theme="light"]{
+  --bg:#f5f5fc;--bg2:#eeeef8;--bg3:#ffffff;--bg4:#f0f0fa;--bg5:#e8e8f5;
+  --card:#ffffff;--card2:#f5f5fc;
+  --border:rgba(100,90,200,0.12);--border2:rgba(100,90,200,0.24);--border3:rgba(100,90,200,0.4);
+  --accent:#6c5ff5;--accent2:#7c6ff7;--accent3:#0d9488;--accent4:#ea580c;
+  --text:#111128;--text2:#4a4a70;--muted:#9090b8;
+  --red:#dc2626;--yellow:#d97706;--green:#16a34a;--orange:#ea580c;
+  --glow:rgba(108,95,245,0.1);--glow2:rgba(108,95,245,0.05);
+  --nav-bg:rgba(245,245,252,0.88);
+  --shadow:0 4px 32px rgba(100,90,200,0.1);--shadow2:0 8px 48px rgba(100,90,200,0.14);
+  --code-bg:#f8f9fc;
+}
+
+:root{
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Inter',sans-serif;
+  --r:14px;--r-sm:10px;--r-xs:7px;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;line-height:1.5}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--border3)}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;gap:0;
+  height:52px;
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px) saturate(180%);
+}
+.nav-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:0 20px;border-right:1px solid var(--border);
+  height:100%;min-width:220px;
+  text-decoration:none;
+}
+.nav-logo-icon{
+  width:28px;height:28px;border-radius:8px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:white;font-weight:900;
+}
+.nav-logo-text{font-size:.95rem;font-weight:800;letter-spacing:-.03em}
+.nav-logo-text span{color:var(--accent)}
+.nav-badge{
+  font-family:var(--mono);font-size:.58rem;
+  color:var(--accent3);background:rgba(52,217,179,.1);
+  border:1px solid rgba(52,217,179,.25);
+  padding:2px 6px;border-radius:4px;letter-spacing:.06em;
+}
+.nav-links{display:flex;align-items:center;height:100%;padding:0 16px;gap:4px;flex:1}
+.nav-link{
+  padding:6px 12px;border-radius:var(--r-xs);
+  font-size:.82rem;font-weight:500;color:var(--text2);
+  text-decoration:none;cursor:pointer;transition:all .15s;
+  border:1px solid transparent;
+}
+.nav-link:hover{color:var(--text);background:var(--bg4);border-color:var(--border)}
+.nav-right{display:flex;align-items:center;gap:8px;padding:0 16px;height:100%}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:var(--r-sm);
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;
+  border:1px solid;
+}
+.nav-btn-ghost{color:var(--text2);border-color:var(--border2);background:transparent}
+.nav-btn-ghost:hover{color:var(--text);border-color:var(--border3);background:var(--bg4)}
+.nav-btn-primary{color:white;border-color:var(--accent);background:var(--accent);box-shadow:0 2px 12px rgba(124,111,247,.3)}
+.nav-btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+.theme-btn{
+  width:34px;height:34px;border-radius:var(--r-sm);
+  background:var(--bg4);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:13px;color:var(--text2);transition:all .15s;
+}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--glow2)}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:80px 2rem 4rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:10%;left:50%;transform:translateX(-50%);
+  width:900px;height:500px;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(124,111,247,.12) 0%,transparent 65%);
+}
+.hero-glow2{
+  position:absolute;bottom:0;left:20%;
+  width:400px;height:300px;pointer-events:none;
+  background:radial-gradient(ellipse,rgba(52,217,179,.07) 0%,transparent 70%);
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:50px;padding:7px 18px;
+  font-size:.76rem;color:var(--text2);font-family:var(--mono);
+  margin-bottom:2rem;letter-spacing:.02em;
+  box-shadow:var(--shadow);
+}
+.eyebrow-dot{width:7px;height:7px;border-radius:50%;background:var(--accent3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(52,217,179,.5)}70%{box-shadow:0 0 0 6px rgba(52,217,179,0)}}
+.hero-headline{
+  font-size:clamp(2.8rem,6vw,5rem);font-weight:900;
+  line-height:1.02;letter-spacing:-.055em;
+  margin-bottom:1.5rem;
+}
+.hero-headline .line2{color:var(--accent2)}
+.hero-headline .line3{
+  background:linear-gradient(135deg,var(--accent) 0%,var(--accent3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:1.05rem;color:var(--text2);max-width:560px;margin:0 auto 2.5rem;line-height:1.7;font-weight:400}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-xl{
+  display:flex;align-items:center;gap:8px;
+  padding:13px 26px;border-radius:var(--r-sm);
+  font-family:var(--sans);font-size:.95rem;font-weight:700;
+  cursor:pointer;transition:all .2s;border:1px solid;
+}
+.btn-xl-primary{
+  background:var(--accent);color:white;border-color:var(--accent);
+  box-shadow:0 4px 20px rgba(124,111,247,.35);
+}
+.btn-xl-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,111,247,.45)}
+.btn-xl-ghost{
+  background:var(--bg3);color:var(--text);border-color:var(--border2);
+  box-shadow:var(--shadow);
+}
+.btn-xl-ghost:hover{border-color:var(--border3);transform:translateY(-1px)}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:1.6rem;font-weight:800;letter-spacing:-.04em;color:var(--text)}
+.stat-num span{color:var(--accent2)}
+.stat-label{font-size:.72rem;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+
+/* ─── SECTION COMMON ─── */
+.section-eyebrow{text-align:center;font-size:.7rem;font-family:var(--mono);color:var(--accent3);letter-spacing:.16em;text-transform:uppercase;margin-bottom:.5rem}
+.section-title{text-align:center;font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;letter-spacing:-.04em;margin-bottom:.6rem}
+.section-sub{text-align:center;font-size:.92rem;color:var(--text2);max-width:520px;margin:0 auto 3rem;line-height:1.65}
+.anchor{scroll-margin-top:64px}
+
+/* ─── AGENT SECTION ─── */
+.agent-section{
+  padding:6rem 1.5rem;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.agent-wrap{max-width:1200px;margin:0 auto}
+
+/* ─── DEVIN-STYLE WORKSPACE ─── */
+.workspace{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:var(--shadow2);
+  display:grid;
+  grid-template-rows:auto 1fr;
+  height:700px;
+}
+
+/* Window chrome */
+.ws-chrome{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 16px;
+  background:var(--bg4);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.chrome-dot{width:12px;height:12px;border-radius:50%}
+.chrome-dot.r{background:#ff5f57}.chrome-dot.y{background:#febc2e}.chrome-dot.g{background:#28c840}
+.chrome-mid{
+  flex:1;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.chrome-title{font-size:.72rem;font-weight:600;color:var(--muted);font-family:var(--mono)}
+.ws-status-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;font-size:.65rem;font-weight:600;
+  border:1px solid;transition:all .3s;font-family:var(--mono);letter-spacing:.03em;
+}
+.ws-status-pill.idle{color:var(--muted);border-color:var(--border2);background:var(--bg5)}
+.ws-status-pill.running{color:var(--accent3);border-color:rgba(52,217,179,.3);background:rgba(52,217,179,.08)}
+.ws-status-pill.done{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.07)}
+.ws-status-pill.error{color:var(--red);border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.07)}
+.status-led{width:6px;height:6px;border-radius:50%;background:currentColor}
+.ws-status-pill.running .status-led{animation:pulse 1s infinite}
+
+/* 3-column layout */
+.ws-body{display:grid;grid-template-columns:52px 280px 1fr;height:100%;overflow:hidden}
+
+/* ── ICON RAIL ── */
+.icon-rail{
+  border-right:1px solid var(--border);
+  background:var(--bg4);
+  display:flex;flex-direction:column;align-items:center;
+  padding:12px 0;gap:4px;
+}
+.rail-btn{
+  width:36px;height:36px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;border:1px solid transparent;
+  font-size:14px;color:var(--muted);background:transparent;
+  position:relative;
+}
+.rail-btn:hover{color:var(--text);background:var(--bg5);border-color:var(--border)}
+.rail-btn.active{color:var(--accent2);background:rgba(124,111,247,.1);border-color:rgba(124,111,247,.25)}
+.rail-badge{
+  position:absolute;top:4px;right:4px;width:8px;height:8px;
+  border-radius:50%;background:var(--accent3);
+  border:1.5px solid var(--bg4);
+}
+.rail-sep{width:28px;height:1px;background:var(--border);margin:4px 0}
+.rail-bottom{margin-top:auto}
+
+/* ── LEFT PANEL ── */
+.ws-left{
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  background:var(--bg3);overflow:hidden;
+}
+.panel-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0;
+}
+.panel-title{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.panel-action{
+  display:flex;align-items:center;gap:4px;
+  background:var(--accent);color:white;border:none;
+  padding:4px 9px;border-radius:var(--r-xs);
+  font-size:.65rem;font-weight:700;cursor:pointer;transition:all .15s;
+  font-family:var(--sans);
+}
+.panel-action:hover{opacity:.88}
+
+/* Conversation list */
+.conv-list{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:2px}
+.conv-item{
+  display:flex;align-items:flex-start;gap:9px;
+  padding:9px 10px;border-radius:var(--r-sm);
+  cursor:pointer;transition:all .15s;border:1px solid transparent;
+}
+.conv-item:hover{background:var(--bg4);border-color:var(--border)}
+.conv-item.active{background:rgba(124,111,247,.08);border-color:rgba(124,111,247,.28)}
+.conv-item-icon{
+  width:26px;height:26px;border-radius:7px;
+  background:var(--bg5);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:var(--muted);flex-shrink:0;margin-top:1px;
+}
+.conv-item.active .conv-item-icon{background:rgba(124,111,247,.12);border-color:rgba(124,111,247,.3);color:var(--accent2)}
+.conv-meta{flex:1;overflow:hidden}
+.conv-name{font-size:.74rem;font-weight:600;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conv-item.active .conv-name{color:var(--text)}
+.conv-preview{font-size:.65rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.conv-time{font-size:.6rem;color:var(--muted);white-space:nowrap;margin-top:2px}
+.conv-del{
+  display:none;background:none;border:none;
+  color:var(--muted);font-size:10px;cursor:pointer;
+  padding:3px;border-radius:4px;transition:all .15s;flex-shrink:0;
+}
+.conv-item:hover .conv-del{display:flex;align-items:center}
+.conv-del:hover{color:var(--red);background:rgba(255,107,107,.1)}
+.conv-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;gap:8px;color:var(--muted);font-size:.74rem;text-align:center;padding:1.5rem;opacity:.55;
+}
+.conv-empty i{font-size:24px;margin-bottom:4px}
+
+/* ── RIGHT: CHAT AREA ── */
+.ws-right{display:flex;flex-direction:column;overflow:hidden;background:var(--bg2)}
+
+/* output tab bar */
+.out-bar{
+  display:flex;align-items:center;
+  border-bottom:1px solid var(--border);
+  background:var(--bg4);flex-shrink:0;padding:0 12px;
+}
+.out-tab{
+  padding:11px 13px;font-size:.71rem;font-weight:600;
+  color:var(--muted);cursor:pointer;transition:all .15s;
+  border-bottom:2px solid transparent;white-space:nowrap;
+}
+.out-tab:hover{color:var(--text)}
+.out-tab.active{color:var(--accent2);border-bottom-color:var(--accent)}
+.out-spacer{flex:1}
+.out-action{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:var(--r-xs);padding:5px 10px;
+  font-size:.68rem;font-weight:600;color:var(--accent3);
+  cursor:pointer;transition:all .15s;
+}
+.out-action:hover{border-color:var(--accent3);background:rgba(52,217,179,.07)}
+.dl-btn{display:none}.dl-btn.vis{display:flex}
+
+/* chat pane */
+.out-pane{display:none;flex:1;overflow-y:auto;padding:20px}
+.out-pane.active{display:block}
+
+/* empty state */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;min-height:250px;gap:12px;text-align:center;
+}
+.empty-orb{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--bg4);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--accent2);margin-bottom:4px;
+  box-shadow:0 0 30px var(--glow);
+}
+.empty-title{font-size:.95rem;font-weight:700;color:var(--text2)}
+.empty-sub{font-size:.78rem;color:var(--muted);max-width:260px;line-height:1.55}
+.empty-suggestions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:8px;max-width:400px}
+.suggest-chip{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:20px;padding:5px 12px;font-size:.71rem;
+  color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.suggest-chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,111,247,.07)}
+
+/* chat messages */
+.chat-log{display:flex;flex-direction:column;gap:20px;padding-bottom:8px}
+
+/* user message */
+.msg-user{display:flex;justify-content:flex-end;animation:fadeUp .2s ease}
+.msg-user-bubble{
+  background:var(--accent);color:white;
+  padding:11px 15px;border-radius:16px 16px 3px 16px;
+  font-size:.86rem;line-height:1.55;max-width:80%;word-break:break-word;
+  box-shadow:0 3px 14px rgba(124,111,247,.28);
+}
+.msg-user-files{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;justify-content:flex-end}
+.msg-file-chip{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.15);
+  border-radius:6px;padding:3px 8px;font-size:.66rem;
+}
+
+/* AI response */
+.msg-ai{display:flex;flex-direction:column;gap:8px;animation:fadeUp .25s ease}
+.msg-ai-header{display:flex;align-items:center;gap:8px;padding-left:2px}
+.ai-avatar{
+  width:24px;height:24px;border-radius:7px;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:white;font-weight:800;flex-shrink:0;
+}
+.ai-name{font-size:.7rem;font-weight:700;color:var(--accent2)}
+.ai-timestamp{font-size:.62rem;color:var(--muted);font-family:var(--mono)}
+
+/* step cards */
+.step-card{
+  border:1px solid var(--border);border-radius:var(--r);
+  overflow:hidden;transition:border-color .15s;
+}
+.step-card:hover{border-color:var(--border2)}
+.step-card-head{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 13px;background:var(--bg4);
+  border-bottom:1px solid var(--border);
+}
+.step-badge{
+  display:flex;align-items:center;gap:5px;
+  font-size:.65rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;padding:3px 8px;border-radius:20px;border:1px solid;
+}
+.step-badge.think{color:var(--accent2);border-color:rgba(167,139,250,.3);background:rgba(167,139,250,.07)}
+.step-badge.plan{color:var(--yellow);border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.06)}
+.step-badge.code{color:var(--accent3);border-color:rgba(52,217,179,.3);background:rgba(52,217,179,.06)}
+.step-badge.result{color:var(--green);border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.07)}
+.step-badge.file{color:var(--orange);border-color:rgba(251,146,60,.3);background:rgba(251,146,60,.06)}
+.step-badge.error{color:var(--red);border-color:rgba(255,107,107,.3);background:rgba(255,107,107,.07)}
+.step-badge i{font-size:9px}
+.step-card-body{
+  padding:12px 14px;font-size:.82rem;line-height:1.7;
+  color:var(--text);white-space:pre-wrap;word-break:break-word;
+  background:var(--bg3);
+}
+.step-card-body.is-code{
+  font-family:var(--mono);font-size:.75rem;
+  color:var(--accent3);background:var(--code-bg);
+  border-top:1px solid var(--border);
+}
+.cursor-blink::after{content:"▌";color:var(--accent);animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* thinking animation */
+.thinking-dots{display:flex;gap:4px;padding:10px 2px}
+.thinking-dots span{width:6px;height:6px;border-radius:50%;background:var(--accent2);animation:bounce .9s infinite}
+.thinking-dots span:nth-child(2){animation-delay:.18s}
+.thinking-dots span:nth-child(3){animation-delay:.36s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-5px);opacity:1}}
+
+/* preview/edited */
+.preview-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.preview-img{max-width:100%;border-radius:var(--r-sm);border:1px solid var(--border2);display:block}
+.preview-code{
+  font-family:var(--mono);font-size:.74rem;line-height:1.6;color:var(--accent3);
+  background:var(--code-bg);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:14px;white-space:pre-wrap;word-break:break-word;max-height:460px;overflow-y:auto;
+}
+.edited-code{
+  font-family:var(--mono);font-size:.74rem;line-height:1.6;color:var(--text);
+  background:var(--code-bg);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:14px;white-space:pre-wrap;word-break:break-word;max-height:460px;overflow-y:auto;
+}
+
+/* ── INPUT BAR ── */
+.input-area{flex-shrink:0;border-top:1px solid var(--border);background:var(--bg3)}
+.attached-bar{display:flex;flex-wrap:wrap;gap:5px;padding:8px 14px 0}
+.att-chip{
+  display:flex;align-items:center;gap:5px;
+  background:var(--bg4);border:1px solid var(--border2);
+  border-radius:6px;padding:3px 9px;font-size:.66rem;color:var(--text2);
+}
+.att-chip-rm{background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;padding:0 0 0 4px;transition:color .15s}
+.att-chip-rm:hover{color:var(--red)}
+.input-row{display:flex;align-items:flex-end;gap:8px;padding:10px 14px 12px}
+.input-box{
+  flex:1;display:flex;align-items:flex-end;
+  background:var(--bg4);border:1.5px solid var(--border2);
+  border-radius:var(--r);transition:all .2s;
+}
+.input-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,111,247,.1);background:var(--bg5)}
+.input-ta{
+  flex:1;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:var(--sans);font-size:.86rem;
+  padding:11px 13px;resize:none;line-height:1.5;
+  min-height:44px;max-height:130px;overflow-y:auto;
+}
+.input-ta::placeholder{color:var(--muted)}
+.input-actions{display:flex;align-items:center;gap:4px;padding:0 6px 8px 0}
+.input-icon-btn{
+  width:30px;height:30px;border-radius:var(--r-xs);
+  background:transparent;border:1px solid transparent;
+  color:var(--muted);font-size:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.input-icon-btn:hover{color:var(--text2);background:var(--bg5);border-color:var(--border)}
+.input-icon-btn.has-files{color:var(--accent3);background:rgba(52,217,179,.08);border-color:rgba(52,217,179,.25)}
+.send-btn{
+  width:40px;height:40px;border-radius:var(--r-sm);
+  background:var(--accent);color:white;border:none;
+  font-size:14px;cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 3px 12px rgba(124,111,247,.35);
+}
+.send-btn:hover:not(:disabled){opacity:.88;transform:translateY(-1px)}
+.send-btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.send-spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── FEATURES ─── */
+.features-section{padding:6rem 2rem;background:var(--bg)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem;max-width:1100px;margin:0 auto}
+.feat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--r);padding:1.5rem;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent2),transparent);
+  opacity:0;transition:opacity .2s;
+}
+.feat-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 12px 40px var(--glow)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{
+  width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(124,111,247,.15),rgba(52,217,179,.08));
+  border:1px solid rgba(124,111,247,.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent2);font-size:16px;margin-bottom:1.1rem;
+}
+.feat-title{font-size:.92rem;font-weight:700;margin-bottom:.45rem;letter-spacing:-.01em}
+.feat-desc{font-size:.78rem;color:var(--text2);line-height:1.6}
+
+/* ─── HOW IT WORKS ─── */
+.hiw-section{padding:6rem 2rem;background:var(--bg2)}
+.hiw-steps{max-width:640px;margin:0 auto;display:flex;flex-direction:column}
+.hiw-step{display:flex;gap:1.2rem;padding-bottom:2.5rem;position:relative}
+.hiw-step:last-child{padding-bottom:0}
+.step-col{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:40px}
+.step-num{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg3);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:800;color:var(--accent2);z-index:1;
+}
+.hiw-step.done .step-num{
+  background:rgba(124,111,247,.1);border-color:rgba(124,111,247,.4);
+}
+.step-vline{flex:1;width:1.5px;background:var(--border);margin-top:6px;margin-bottom:-6px}
+.hiw-step:last-child .step-vline{display:none}
+.step-info{padding-top:8px}
+.step-info h4{font-size:1rem;font-weight:700;margin-bottom:.35rem}
+.step-info p{font-size:.82rem;color:var(--text2);line-height:1.6}
+
+/* ─── ABOUT ─── */
+.about-section{padding:6rem 2rem;background:var(--bg)}
+.about-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:210px 1fr;gap:4rem;align-items:start}
+.about-photo-wrap{display:flex;flex-direction:column;align-items:center;gap:1rem}
+.about-photo{
+  width:180px;height:180px;border-radius:22px;
+  object-fit:cover;border:2px solid var(--border2);
+  box-shadow:var(--shadow2),0 0 40px var(--glow);
+}
+.about-photo-fb{
+  width:180px;height:180px;border-radius:22px;
+  background:var(--bg3);border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;color:var(--accent2);
+}
+.about-name{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;text-align:center}
+.about-handle{font-size:.72rem;font-family:var(--mono);color:var(--accent3);text-align:center;letter-spacing:.04em}
+.about-text h3{font-size:1.65rem;font-weight:800;letter-spacing:-.04em;margin-bottom:1.1rem;line-height:1.15}
+.about-text h3 em{font-style:normal;color:var(--accent2)}
+.about-text p{font-size:.85rem;color:var(--text2);line-height:1.8;margin-bottom:1rem}
+.about-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:1.5rem}
+.about-tag{
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:20px;padding:5px 13px;font-size:.71rem;
+  color:var(--accent2);display:flex;align-items:center;gap:6px;
+}
+.about-tag i{font-size:11px;color:var(--accent3)}
+
+/* ─── FOOTER ─── */
+footer{
+  border-top:1px solid var(--border);background:var(--bg2);
+  padding:2rem;text-align:center;font-size:.76rem;color:var(--muted);
+}
+footer a{color:var(--accent2);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+/* ─── FILE PANEL STYLES ─── */
+.upload-drop{
+  border:2px dashed var(--border2);border-radius:var(--r);
+  padding:20px 14px;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--bg4);position:relative;
+}
+.upload-drop:hover,.upload-drop.drag{border-color:var(--accent);background:rgba(124,111,247,.04)}
+.upload-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:20px;color:var(--accent2);margin-bottom:7px;opacity:.75}
+.upload-text{font-size:.74rem;color:var(--muted);line-height:1.5}
+.upload-text b{color:var(--accent2)}
+.file-hint{font-size:.7rem;color:var(--accent3);background:rgba(52,217,179,.06);border:1px solid rgba(52,217,179,.18);border-radius:var(--r-xs);padding:7px 10px;line-height:1.5}
+.file-items{display:flex;flex-direction:column;gap:5px}
+.file-item{
+  display:flex;align-items:center;gap:8px;background:var(--bg4);
+  border:1px solid var(--border);border-radius:var(--r-sm);padding:7px 10px;cursor:pointer;transition:all .15s;
+}
+.file-item:hover{border-color:var(--border2)}
+.file-name{font-size:.72rem;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-sz{font-size:.62rem;color:var(--muted)}
+.file-rm{background:none;border:none;color:var(--muted);font-size:10px;cursor:pointer;padding:2px 4px;border-radius:3px;transition:all .15s}
+.file-rm:hover{color:var(--red);background:rgba(255,107,107,.1)}
+
+/* quick chips */
+.quick-chips{display:flex;flex-wrap:wrap;gap:4px;padding:10px 14px}
+.q-chip{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px;font-size:.68rem;font-weight:500;
+  color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.q-chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(124,111,247,.06)}
+
+/* hidden file input */
+.hfi{display:none}
+
+@media(max-width:768px){
+  .ws-body{grid-template-columns:1fr}
+  .icon-rail,.ws-left{display:none}
+  .about-inner{grid-template-columns:1fr;gap:2rem}
+  .about-photo-wrap{flex-direction:row;align-items:center;gap:1.5rem}
+  .about-photo,.about-photo-fb{width:90px;height:90px;border-radius:14px}
+}
+
+  /* ── FEATURE ROWS ── */
+  .feat-row-card {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all .2s;
+    align-items: start;
+  }
+  .feat-row-card:hover {
+    border-color: var(--border2);
+    box-shadow: 0 8px 32px var(--glow2);
+    transform: translateY(-1px);
+  }
+  .feat-row-icon {
+    width: 54px; height: 54px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0; border: 1px solid var(--border2);
+  }
+  .feat-row-badge {
+    display: inline-block;
+    font-size: .6rem; font-weight: 800; letter-spacing: .1em;
+    padding: 2px 7px; border-radius: 4px; margin-bottom: 6px;
+    background: rgba(124,111,247,.1); color: var(--accent2);
+    border: 1px solid rgba(124,111,247,.25);
+  }
+  .feat-row-title { font-size: 1rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: .4rem; }
+  .feat-row-desc { font-size: .83rem; color: var(--text2); line-height: 1.65; margin-bottom: .85rem; }
+  .feat-row-demo {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  }
+  .demo-pill {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: .71rem; font-weight: 500; color: var(--text2);
+    font-family: var(--mono);
+  }
+  .demo-pill.active {
+    background: rgba(124,111,247,.1); border-color: rgba(124,111,247,.3);
+    color: var(--accent2);
+  }
+  .demo-pill i { font-size: 10px; }
+  .demo-arrow { font-size: .75rem; color: var(--muted); font-weight: 700; }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" onclick="smoothScroll('top')">
+    <div class="nav-logo-icon">K</div>
+    <span class="nav-logo-text">Kevin<span>AI</span></span>
+    <span class="nav-badge">v2</span>
+  </a>
+  <div class="nav-links">
+    <span class="nav-link" onclick="smoothScroll('agent')">Agent</span>
+    <span class="nav-link" onclick="smoothScroll('features')">Features</span>
+    <span class="nav-link" onclick="smoothScroll('hiw')">How it works</span>
+    <span class="nav-link" onclick="smoothScroll('about')">About</span>
+  </div>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
+    <button class="nav-btn nav-btn-primary" onclick="smoothScroll('agent')">Launch agent →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero anchor" id="top">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-eyebrow"><div class="eyebrow-dot"></div>Powered by DeepSeek · Free &amp; Open</div>
+  <h1 class="hero-headline">
+    Your personal<br>
+    <span class="line2">AI software</span><br>
+    <span class="line3">engineer.</span>
+  </h1>
+  <p class="hero-sub">Describe what you want to build. Upload files to edit. KevinAI plans, codes, debugs, and delivers — like a senior engineer on your team.</p>
+  <div class="hero-btns">
+    <button class="btn-xl btn-xl-primary" onclick="smoothScroll('agent')"><i class="fa-solid fa-bolt"></i> Start building</button>
+    <button class="btn-xl btn-xl-ghost" onclick="smoothScroll('hiw')"><i class="fa-regular fa-circle-play"></i> See how it works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">100<span>%</span></div><div class="stat-label">Free to use</div></div>
+    <div class="stat"><div class="stat-num">20<span>+</span></div><div class="stat-label">Languages</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Conversations saved</div></div>
+  </div>
+</section>
+
+<!-- AGENT -->
+<section class="agent-section anchor" id="agent">
+  <div class="agent-wrap">
+    <div class="section-eyebrow">live agent</div>
+    <h2 class="section-title">Build anything. Right here.</h2>
+    <p class="section-sub">Type a task, upload files, and watch KevinAI reason through it step by step.</p>
+
+    <div class="workspace">
+      <!-- Chrome bar -->
+      <div class="ws-chrome">
+        <div class="chrome-dot r"></div><div class="chrome-dot y"></div><div class="chrome-dot g"></div>
+        <div class="chrome-mid">
+          <div class="chrome-title">kevinai — workspace</div>
+        </div>
+        <div class="ws-status-pill idle" id="agentStatus">
+          <div class="status-led"></div><span id="statusTxt">Idle</span>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="ws-body">
+
+        <!-- Icon rail -->
+        <div class="icon-rail">
+          <button class="rail-btn active" id="rail-chat" onclick="setRail('chat',this)" title="Chat"><i class="fa-regular fa-comment"></i></button>
+          <button class="rail-btn" id="rail-files" onclick="setRail('files',this)" title="Files"><i class="fa-solid fa-paperclip"></i><div class="rail-badge" id="fileBadge" style="display:none"></div></button>
+          <div class="rail-sep"></div>
+          <button class="rail-btn" id="rail-preview" onclick="setRail('preview',this)" title="Preview" style="opacity:.4;pointer-events:none"><i class="fa-regular fa-eye"></i></button>
+          <button class="rail-btn" id="rail-edited" onclick="setRail('edited',this)" title="Edited file" style="opacity:.4;pointer-events:none"><i class="fa-solid fa-wand-magic-sparkles"></i></button>
+        </div>
+
+        <!-- Left panel -->
+        <div class="ws-left">
+          <!-- Chat history view -->
+          <div id="lp-chat" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+            <div class="panel-header">
+              <span class="panel-title">Conversations</span>
+              <button class="panel-action" onclick="newChat()"><i class="fa-solid fa-plus"></i> New</button>
+            </div>
+            <div class="conv-list" id="convList">
+              <div class="conv-empty" id="convEmpty">
+                <i class="fa-regular fa-comment-dots"></i>
+                <div>No conversations yet</div>
+                <div style="font-size:.62rem;margin-top:2px">Start chatting to save history</div>
+              </div>
+            </div>
+            <div class="quick-chips" style="border-top:1px solid var(--border);padding-top:10px">
+              <div class="q-chip" onclick="setTask('Build a React todo app')">React todo</div>
+              <div class="q-chip" onclick="setTask('Python web scraper')">Scraper</div>
+              <div class="q-chip" onclick="setTask('REST API with auth')">REST API</div>
+              <div class="q-chip" onclick="setTask('Debug my code')">Debug</div>
+              <div class="q-chip" onclick="setTask('Write SQL queries')">SQL</div>
+              <div class="q-chip" onclick="setTask('Add dark mode to uploaded HTML')">Dark mode</div>
+            </div>
+          </div>
+          <!-- Files view -->
+          <div id="lp-files" style="display:none;flex-direction:column;flex:1;overflow:hidden;padding:12px;gap:10px">
+            <div class="panel-header" style="padding:0 0 10px">
+              <span class="panel-title">Attached files</span>
+              <button class="panel-action" onclick="document.getElementById('fileInputPanel').click()"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+            <input type="file" id="fileInputPanel" class="hfi" multiple accept="image/*,.html,.htm,.css,.js,.ts,.py,.txt,.json,.md,.jsx,.tsx,.csv" onchange="handleFiles(this.files)">
+            <div class="upload-drop" id="uploadZone">
+              <input type="file" id="fileInput" multiple accept="image/*,.html,.htm,.css,.js,.ts,.py,.txt,.json,.md,.jsx,.tsx,.csv" onchange="handleFiles(this.files)">
+              <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <div class="upload-text"><b>Click or drag files here</b><br>Images, HTML, CSS, JS, Python…</div>
+            </div>
+            <div class="file-hint" id="fileNote" style="display:none"><i class="fa-solid fa-circle-info"></i> Files will be sent with your next message.</div>
+            <div class="file-items" id="fileList"></div>
+          </div>
+        </div>
+
+        <!-- Right: chat + input -->
+        <div class="ws-right">
+          <!-- Tab bar -->
+          <div class="out-bar">
+            <div class="out-tab active" onclick="switchOutTab('chat',this)" id="otab-chat">Chat</div>
+            <div class="out-tab" onclick="switchOutTab('preview',this)" id="otab-preview" style="display:none">Preview</div>
+            <div class="out-tab" onclick="switchOutTab('livepreview',this)" id="otab-livepreview" style="display:none"><i class="fa-solid fa-play" style="font-size:9px;margin-right:4px"></i>Live Run</div>
+            <div class="out-tab" onclick="switchOutTab('edited',this)" id="otab-edited" style="display:none">Edited File</div>
+            <div class="out-spacer"></div>
+            <button class="out-action" id="exportBtn" onclick="exportChat()" style="display:none"><i class="fa-solid fa-file-export"></i> Export chat</button>
+            <button class="out-action dl-btn" id="dlBtn" onclick="downloadEdited()"><i class="fa-solid fa-download"></i> Download</button>
+          </div>
+
+          <!-- Chat pane -->
+          <div class="out-pane active" id="op-chat">
+            <div class="empty-state" id="chatEmpty">
+              <div class="empty-orb"><i class="fa-solid fa-robot"></i></div>
+              <div class="empty-title">Ask KevinAI anything</div>
+              <div class="empty-sub">Build, debug, edit files, explain code — KevinAI handles it all.</div>
+              <div class="empty-suggestions">
+                <div class="suggest-chip" onclick="setTask('Build a landing page with Tailwind CSS')">Landing page</div>
+                <div class="suggest-chip" onclick="setTask('Write a Python data analysis script')">Data analysis</div>
+                <div class="suggest-chip" onclick="setTask('Create a Node.js REST API')">Node API</div>
+                <div class="suggest-chip" onclick="setTask('Explain how async/await works in JS')">Explain async</div>
+                <div class="suggest-chip" onclick="setTask('Review my uploaded code for bugs')">Code review</div>
+              </div>
+            </div>
+            <div class="chat-log" id="chatLog" style="display:none"></div>
+          </div>
+
+          <!-- Preview pane -->
+          <div class="out-pane" id="op-preview">
+            <div class="empty-state"><div class="empty-orb"><i class="fa-regular fa-file-image"></i></div><div class="empty-title">No file previewed</div><div class="empty-sub">Click a file in the Files panel to preview it here</div></div>
+          </div>
+
+          <!-- Edited pane -->
+          <div class="out-pane" id="op-edited">
+            <div class="empty-state"><div class="empty-orb"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div class="empty-title">No edited file yet</div><div class="empty-sub">Ask KevinAI to edit an uploaded file and the result appears here</div></div>
+          </div>
+
+          <!-- Live preview pane -->
+          <div class="out-pane" id="op-livepreview">
+            <div class="empty-state"><div class="empty-orb"><i class="fa-solid fa-play"></i></div><div class="empty-title">No code to run yet</div><div class="empty-sub">Ask KevinAI to build a webpage or UI — a Run button will appear to preview it live</div></div>
+          </div>
+
+          <!-- Input area -->
+          <input type="file" id="hiddenFileInput" class="hfi" multiple accept="image/*,.html,.htm,.css,.js,.ts,.py,.txt,.json,.md,.jsx,.tsx,.csv" onchange="handleFiles(this.files)">
+          <div class="input-area">
+            <div class="attached-bar" id="attachedBar" style="display:none"></div>
+            <div class="input-row">
+              <button class="input-icon-btn" id="attachBtn" onclick="document.getElementById('hiddenFileInput').click()" title="Attach file"><i class="fa-solid fa-paperclip"></i></button>
+              <div class="input-box">
+                <textarea class="input-ta" id="taskInput" placeholder="Ask KevinAI anything… build, edit, debug, explain" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+                <div class="input-actions">
+                  <button class="input-icon-btn" onclick="clearInput()" title="Clear"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+              </div>
+              <button class="send-btn" id="sendBtn" onclick="runAgent()">
+                <div class="send-spin" id="sendSpin" style="display:none"></div>
+                <i class="fa-solid fa-paper-plane" id="sendIcon"></i>
+              </button>
+            </div>
+            <div style="padding:0 14px 8px;font-size:.62rem;color:var(--muted);display:flex;align-items:center;gap:6px">
+              <i class="fa-solid fa-circle-info" style="font-size:9px"></i>
+              Press Enter to send · Shift+Enter for new line · Attach files with the paperclip
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section anchor" id="features">
+  <div class="section-eyebrow">capabilities</div>
+  <h2 class="section-title">Not just a chatbot.<br>A real engineer.</h2>
+  <p class="section-sub">KevinAI doesn't just suggest code — it reasons, plans, builds, and iterates the same way a developer would.</p>
+
+  <!-- Big feature rows -->
+  <div class="feat-rows" style="max-width:1000px;margin:0 auto 4rem;display:flex;flex-direction:column;gap:1.5rem">
+
+    <div class="feat-row-card">
+      <div class="feat-row-icon" style="background:linear-gradient(135deg,rgba(124,111,247,.2),rgba(52,217,179,.1))"><i class="fa-solid fa-eye" style="color:var(--accent2)"></i></div>
+      <div class="feat-row-body">
+        <div class="feat-row-badge">NEW</div>
+        <div class="feat-row-title">Live code preview</div>
+        <p class="feat-row-desc">Ask KevinAI to build a webpage, component, or UI — then click <strong>Preview</strong> to run it live inside the workspace. No copy-paste, no switching tabs. See it render instantly.</p>
+        <div class="feat-row-demo">
+          <span class="demo-pill"><i class="fa-solid fa-terminal"></i> "Build a gradient hero section"</span>
+          <span class="demo-arrow">→</span>
+          <span class="demo-pill active"><i class="fa-solid fa-play"></i> Runs live in browser</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-row-card">
+      <div class="feat-row-icon" style="background:linear-gradient(135deg,rgba(52,217,179,.18),rgba(124,111,247,.08))"><i class="fa-solid fa-layer-group" style="color:var(--accent3)"></i></div>
+      <div class="feat-row-body">
+        <div class="feat-row-badge" style="background:rgba(52,217,179,.12);color:var(--accent3);border-color:rgba(52,217,179,.3)">MULTI-FILE</div>
+        <div class="feat-row-title">Full project context</div>
+        <p class="feat-row-desc">Upload multiple files at once — HTML, CSS, JS, Python, images. KevinAI reads all of them together and understands the full picture before responding. Like handing a dev your entire repo.</p>
+        <div class="feat-row-demo">
+          <span class="demo-pill"><i class="fa-solid fa-paperclip"></i> index.html + style.css + app.js</span>
+          <span class="demo-arrow">→</span>
+          <span class="demo-pill active"><i class="fa-solid fa-brain"></i> Full context understood</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-row-card">
+      <div class="feat-row-icon" style="background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(251,146,60,.08))"><i class="fa-solid fa-rotate" style="color:var(--yellow)"></i></div>
+      <div class="feat-row-body">
+        <div class="feat-row-badge" style="background:rgba(251,191,36,.1);color:var(--yellow);border-color:rgba(251,191,36,.3)">ITERATIVE</div>
+        <div class="feat-row-title">Refine in conversation</div>
+        <p class="feat-row-desc">Don't like the output? Just say "make it faster", "add dark mode", or "use TypeScript instead." KevinAI remembers everything and iterates. No re-explaining, no starting over.</p>
+        <div class="feat-row-demo">
+          <span class="demo-pill"><i class="fa-regular fa-comment"></i> "Now add authentication"</span>
+          <span class="demo-arrow">→</span>
+          <span class="demo-pill active"><i class="fa-solid fa-code-branch"></i> Builds on existing code</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat-row-card">
+      <div class="feat-row-icon" style="background:linear-gradient(135deg,rgba(74,222,128,.15),rgba(52,217,179,.06))"><i class="fa-solid fa-file-export" style="color:var(--green)"></i></div>
+      <div class="feat-row-body">
+        <div class="feat-row-badge" style="background:rgba(74,222,128,.1);color:var(--green);border-color:rgba(74,222,128,.3)">EXPORT</div>
+        <div class="feat-row-title">Export everything</div>
+        <p class="feat-row-desc">Download edited files with one click. Export your full conversation as a clean markdown file. Copy any code block instantly. Your work, your way.</p>
+        <div class="feat-row-demo">
+          <span class="demo-pill"><i class="fa-solid fa-download"></i> Download edited file</span>
+          <span class="demo-arrow">+</span>
+          <span class="demo-pill"><i class="fa-regular fa-copy"></i> Copy code block</span>
+          <span class="demo-arrow">+</span>
+          <span class="demo-pill active"><i class="fa-solid fa-file-lines"></i> Export chat as .md</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Small grid below -->
+  <div class="feat-grid" style="max-width:1000px;margin:0 auto">
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-brain"></i></div>
+      <div class="feat-title">Thinks before it codes</div>
+      <p class="feat-desc">Shows you a Plan and Thinking step before writing code — you see exactly how it approaches the problem.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-image"></i></div>
+      <div class="feat-title">Upload a screenshot → get code</div>
+      <p class="feat-desc">Drop in a wireframe, mockup, or screenshot. KevinAI reads it visually and codes it from scratch.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-bug"></i></div>
+      <div class="feat-title">Debug like a senior dev</div>
+      <p class="feat-desc">Paste broken code or upload your file. Get root cause analysis, not just a fix — explained clearly.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-database"></i></div>
+      <div class="feat-title">20+ languages</div>
+      <p class="feat-desc">Python, JS, TS, React, SQL, Go, Rust, Swift, Bash, C++, PHP, Ruby, Kotlin — real production code in all of them.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-moon"></i></div>
+      <div class="feat-title">Light &amp; dark mode</div>
+      <p class="feat-desc">Instant theme switching. Your preference is saved so it's always the way you like it.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon"><i class="fa-solid fa-lock"></i></div>
+      <div class="feat-title">Private by default</div>
+      <p class="feat-desc">Conversations save locally in your browser. Nothing is stored on any server. Your code stays yours.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- HOW IT WORKS -->
+<section class="hiw-section anchor" id="hiw">
+  <div class="section-eyebrow">process</div>
+  <h2 class="section-title">How KevinAI works</h2>
+  <p class="section-sub">Four phases. One seamless loop.</p>
+  <div class="hiw-steps">
+    <div class="hiw-step">
+      <div class="step-col"><div class="step-num">01</div><div class="step-vline"></div></div>
+      <div class="step-info"><h4>Describe in plain English</h4><p>No tickets, no specs. Just tell KevinAI what you need. Optionally attach files.</p></div>
+    </div>
+    <div class="hiw-step">
+      <div class="step-col"><div class="step-num">02</div><div class="step-vline"></div></div>
+      <div class="step-info"><h4>Agent reads and reasons</h4><p>KevinAI reads your files, understands the full context, and builds a plan before writing a single line of code.</p></div>
+    </div>
+    <div class="hiw-step">
+      <div class="step-col"><div class="step-num">03</div><div class="step-vline"></div></div>
+      <div class="step-info"><h4>Code is written and verified</h4><p>Step-by-step execution. If editing a file, you get the complete modified version back — not a diff, the whole thing.</p></div>
+    </div>
+    <div class="hiw-step">
+      <div class="step-col"><div class="step-num">04</div><div class="step-vline"></div></div>
+      <div class="step-info"><h4>Iterate in the same conversation</h4><p>Follow up, refine, and build on previous answers. KevinAI remembers everything in the conversation.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section anchor" id="about">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="section-eyebrow">the builder</div>
+    <h2 class="section-title">About me</h2>
+  </div>
+  <div class="about-inner">
+    <div class="about-photo-wrap">
+      <img src="IMG_7529.png" alt="Shriyan Avadhanula" class="about-photo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="about-photo-fb" style="display:none"><i class="fa-solid fa-user"></i></div>
+      <div class="about-name">Shriyan Avadhanula</div>
+      <div class="about-handle">Builder · Developer · Entrepreneur</div>
+    </div>
+    <div class="about-text">
+      <h3>Building intelligent tools<br>that <em>actually work.</em></h3>
+      <p>I'm a high schooler from Virginia with a passion for building things at the intersection of finance, technology, and business. I created KevinAI as a personal project to make AI-powered coding accessible to everyone — no expensive subscriptions, no complex setups.</p>
+      <p>Outside of coding, I lead finance initiatives as Co-President of Fund Flow RVA and serve as Finance Director at the organizational level. I work directly with a Partner-level M&amp;A professional on real deal research and business strategy — experience that shapes how I think about building products that solve real problems.</p>
+      <p>I'm enrolled in the IB Program with a focus on finance, cybersecurity, and business strategy. KevinAI is one of several projects I'm building to combine those interests into something useful.</p>
+      <div class="about-tags">
+        <div class="about-tag"><i class="fa-solid fa-chart-line"></i>Finance &amp; M&amp;A</div>
+        <div class="about-tag"><i class="fa-solid fa-shield-halved"></i>Cybersecurity</div>
+        <div class="about-tag"><i class="fa-solid fa-code"></i>Full-stack dev</div>
+        <div class="about-tag"><i class="fa-solid fa-lightbulb"></i>Business strategy</div>
+        <div class="about-tag"><i class="fa-solid fa-graduation-cap"></i>IB Program</div>
+        <div class="about-tag"><i class="fa-solid fa-location-dot"></i>Virginia</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Built by <a href="#about">Shriyan Avadhanula</a> · KevinAI — your AI software engineer · <span style="color:var(--muted)">Powered by DeepSeek via OpenRouter</span>
+</footer>
+
+<script>
+const WORKER_URL = 'https://kai.avadhanula-shriyan.workers.dev/';
+
+const S = {
+  files: [],
+  editedContent: '', editedFilename: '', editedMime: '',
+  currentChatId: null,
+  isRunning: false,
+  messageHistory: [],
+};
+
+// ── STORAGE ──
+function loadChats(){try{return JSON.parse(localStorage.getItem('kevinai_chats')||'[]')}catch{return[]}}
+function saveChats(chats){localStorage.setItem('kevinai_chats',JSON.stringify(chats))}
+function getChatById(id){return loadChats().find(c=>c.id===id)}
+function upsertChat(chat){const chats=loadChats();const idx=chats.findIndex(c=>c.id===chat.id);if(idx>=0)chats[idx]=chat;else chats.unshift(chat);saveChats(chats)}
+function deleteChat(id){saveChats(loadChats().filter(c=>c.id!==id))}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+
+// ── SIDEBAR ──
+function renderSidebar(){
+  const chats=loadChats();
+  const list=document.getElementById('convList');
+  list.innerHTML='';
+  if(!chats.length){
+    list.innerHTML='<div class="conv-empty"><i class="fa-regular fa-comment-dots"></i><div>No conversations yet</div><div style="font-size:.62rem;margin-top:2px">Start chatting to save history</div></div>';
+    return;
+  }
+  chats.forEach(chat=>{
+    const d=document.createElement('div');
+    d.className='conv-item'+(chat.id===S.currentChatId?' active':'');
+    d.innerHTML=`<div class="conv-item-icon"><i class="fa-regular fa-comment"></i></div>
+      <div class="conv-meta">
+        <div class="conv-name">${esc(chat.title)}</div>
+        <div class="conv-preview">${esc(chat.preview||'')}</div>
+        <div class="conv-time">${fmtDate(chat.updatedAt)}</div>
+      </div>
+      <button class="conv-del" onclick="doDeleteChat('${chat.id}',event)" title="Delete"><i class="fa-solid fa-trash"></i></button>`;
+    d.onclick=(e)=>{if(!e.target.closest('.conv-del'))loadChat(chat.id)};
+    list.appendChild(d);
+  });
+}
+function fmtDate(ts){
+  const d=new Date(ts),now=new Date(),diff=(now-d)/1000;
+  if(diff<60)return'just now';
+  if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';
+  return d.toLocaleDateString([],{month:'short',day:'numeric'});
+}
+
+// ── LOAD CHAT ──
+function loadChat(id){
+  const chat=getChatById(id);
+  if(!chat)return;
+  S.currentChatId=id;
+  S.messageHistory=chat.apiHistory||[];
+  renderSidebar();
+  const log=document.getElementById('chatLog');
+  log.innerHTML='';
+  log.style.display='flex';
+  document.getElementById('chatEmpty').style.display='none';
+  (chat.turns||[]).forEach(t=>renderTurn(t,false));
+  document.getElementById('exportBtn').style.display='flex';
+  scrollChat();
+}
+
+// ── NEW CHAT ──
+function newChat(){
+  S.currentChatId=null;S.messageHistory=[];
+  S.files=[];renderFileList();updateAttachBar();
+  document.getElementById('fileNote').style.display='none';
+  document.getElementById('chatLog').innerHTML='';
+  document.getElementById('chatLog').style.display='none';
+  document.getElementById('chatEmpty').style.display='flex';
+  document.getElementById('taskInput').value='';
+  document.getElementById('taskInput').style.height='auto';
+  setStatus('idle');
+  renderSidebar();
+}
+function doDeleteChat(id,e){
+  e.stopPropagation();
+  if(!confirm('Delete this conversation?'))return;
+  deleteChat(id);
+  if(S.currentChatId===id)newChat();
+  else renderSidebar();
+}
+
+// ── RENDER TURN ──
+function renderTurn(turn,scroll=true){
+  const log=document.getElementById('chatLog');
+  log.style.display='flex';
+  document.getElementById('chatEmpty').style.display='none';
+  const wrap=document.createElement('div');
+  // User
+  const userRow=document.createElement('div');
+  userRow.className='msg-user';
+  const bubble=document.createElement('div');
+  bubble.className='msg-user-bubble';
+  bubble.textContent=turn.userText;
+  userRow.appendChild(bubble);
+  wrap.appendChild(userRow);
+  // AI
+  if(turn.steps&&turn.steps.length){
+    const aiWrap=document.createElement('div');
+    aiWrap.className='msg-ai';
+    const hdr=document.createElement('div');
+    hdr.className='msg-ai-header';
+    hdr.innerHTML='<div class="ai-avatar">K</div><span class="ai-name">KevinAI</span><span class="ai-timestamp">'+fmtDate(turn.ts||Date.now())+'</span>';
+    aiWrap.appendChild(hdr);
+    turn.steps.forEach(s=>{aiWrap.appendChild(mkCard(s.type,s.content,s.isCode))});
+    wrap.appendChild(aiWrap);
+  }
+  log.appendChild(wrap);
+  if(scroll)scrollChat();
+  return wrap;
+}
+
+// ── STEP CARD ──
+const BADGE_ICONS={think:'fa-brain',plan:'fa-list-check',code:'fa-code',result:'fa-circle-check',file:'fa-file-arrow-down',error:'fa-triangle-exclamation'};
+const BADGE_LABELS={think:'Thinking',plan:'Planning',code:'Code',result:'Result',file:'File ready',error:'Error'};
+function mkCard(type,content,isCode){
+  const el=document.createElement('div');
+  el.className='step-card';
+  el.innerHTML=`<div class="step-card-head"><div class="step-badge ${type}"><i class="fa-solid ${BADGE_ICONS[type]||'fa-circle'}" style="font-size:9px"></i>${BADGE_LABELS[type]||type}</div></div><div class="step-card-body${isCode?' is-code':''}">${esc(content.trim())}</div>`;
+  if(isCode) addCopyBtn(el, content.replace(/^```\w*\n?/,'').replace(/```$/,'').trim());
+  return el;
+}
+
+function addAIMessage(){
+  const log=document.getElementById('chatLog');
+  log.style.display='flex';
+  document.getElementById('chatEmpty').style.display='none';
+  const wrap=document.createElement('div');
+  const aiWrap=document.createElement('div');
+  aiWrap.className='msg-ai';
+  const hdr=document.createElement('div');
+  hdr.className='msg-ai-header';
+  hdr.innerHTML='<div class="ai-avatar">K</div><span class="ai-name">KevinAI</span><span class="ai-timestamp">just now</span>';
+  aiWrap.appendChild(hdr);
+  // thinking dots
+  const dots=document.createElement('div');
+  dots.className='thinking-dots';dots.id='thinkingDots';
+  dots.innerHTML='<span></span><span></span><span></span>';
+  aiWrap.appendChild(dots);
+  wrap.appendChild(aiWrap);
+  log.appendChild(wrap);
+  scrollChat();
+  return {wrap,aiWrap,dots};
+}
+function addStepToAI(aiWrap,type,content,isCode){
+  const card=mkCard(type,content,isCode);
+  card.style.animation='fadeUp .25s ease';
+  aiWrap.appendChild(card);
+  scrollChat();
+  return card;
+}
+function scrollChat(){
+  const p=document.getElementById('op-chat');
+  p.scrollTop=p.scrollHeight;
+}
+
+// ── RAIL / TABS ──
+function setRail(id,btn){
+  document.querySelectorAll('.rail-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('lp-chat').style.display=id==='chat'?'flex':'none';
+  document.getElementById('lp-files').style.display=id==='files'?'flex':'none';
+}
+function switchOutTab(id,el){
+  document.querySelectorAll('.out-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.out-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('op-'+id).classList.add('active');
+}
+function showOutTab(id){
+  document.querySelectorAll('.out-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.out-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('otab-'+id).classList.add('active');
+  document.getElementById('op-'+id).classList.add('active');
+}
+
+// ── STATUS ──
+function setStatus(s){
+  const el=document.getElementById('agentStatus');
+  el.className='ws-status-pill '+s;
+  document.getElementById('statusTxt').textContent={idle:'Idle',running:'Running…',done:'Done',error:'Error'}[s]||s;
+}
+
+// ── FILES ──
+function handleFiles(files){Array.from(files).forEach(loadFile)}
+function loadFile(file){
+  const r=new FileReader();
+  r.onload=e=>{
+    const dataUrl=e.target.result;
+    const base64=dataUrl.split(',')[1];
+    const idx=S.files.findIndex(f=>f.name===file.name);
+    const entry={name:file.name,type:file.type,size:file.size,base64,dataUrl};
+    if(idx>=0)S.files[idx]=entry;else S.files.push(entry);
+    renderFileList();
+    document.getElementById('fileNote').style.display='block';
+    document.getElementById('fileBadge').style.display='block';
+    updateAttachBar();
+    previewFile(entry);
+    document.getElementById('rail-preview').style.opacity='1';
+    document.getElementById('rail-preview').style.pointerEvents='auto';
+    document.getElementById('otab-preview').style.display='block';
+  };
+  r.readAsDataURL(file);
+}
+function renderFileList(){
+  const list=document.getElementById('fileList');
+  list.innerHTML='';
+  S.files.forEach((f,i)=>{
+    const d=document.createElement('div');
+    d.className='file-item';
+    d.innerHTML=`<span style="font-size:14px">${getIcon(f.type,f.name)}</span><span class="file-name" title="${esc(f.name)}">${esc(f.name)}</span><span class="file-sz">${fmt(f.size)}</span><button class="file-rm" onclick="rmFile(${i},event)">✕</button>`;
+    d.onclick=()=>{previewFile(f);showOutTab('preview')};
+    list.appendChild(d);
+  });
+  if(!S.files.length)document.getElementById('fileBadge').style.display='none';
+}
+function rmFile(i,e){
+  e.stopPropagation();S.files.splice(i,1);renderFileList();updateAttachBar();
+  if(!S.files.length){document.getElementById('fileNote').style.display='none';}
+}
+function getIcon(type,name){
+  if(type.startsWith('image/'))return'🖼️';
+  const e=name.split('.').pop().toLowerCase();
+  return{html:'🌐',htm:'🌐',css:'🎨',js:'⚡',ts:'⚡',py:'🐍',json:'📋',md:'📝',txt:'📄',jsx:'⚛️',tsx:'⚛️',csv:'📊'}[e]||'📄';
+}
+function fmt(b){return b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB'}
+function updateAttachBar(){
+  const bar=document.getElementById('attachedBar');
+  const btn=document.getElementById('attachBtn');
+  if(!S.files.length){bar.style.display='none';btn.classList.remove('has-files');return}
+  bar.style.display='flex';btn.classList.add('has-files');
+  bar.innerHTML=S.files.map((f,i)=>`<div class="att-chip">${getIcon(f.type,f.name)} ${esc(f.name)}<button class="att-chip-rm" onclick="rmFile(${i},event)">✕</button></div>`).join('');
+}
+function previewFile(f){
+  const p=document.getElementById('op-preview');
+  p.innerHTML='';
+  const lbl=document.createElement('div');lbl.className='preview-label';lbl.textContent=f.name;p.appendChild(lbl);
+  if(f.type.startsWith('image/')){
+    const img=document.createElement('img');img.className='preview-img';img.src=f.dataUrl;p.appendChild(img);
+  } else {
+    const text=atob(f.base64);
+    const pre=document.createElement('pre');pre.className='preview-code';pre.textContent=text.slice(0,12000)+(text.length>12000?'\n…truncated':'');p.appendChild(pre);
+  }
+}
+
+// ── DOWNLOAD ──
+function downloadEdited(){
+  if(!S.editedContent)return;
+  const blob=new Blob([S.editedContent],{type:S.editedMime||'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=S.editedFilename||'kevinai_output.txt';a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── INPUT ──
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();runAgent()}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,130)+'px'}
+function clearInput(){document.getElementById('taskInput').value='';document.getElementById('taskInput').style.height='auto'}
+function setTask(t){
+  document.getElementById('taskInput').value=t;
+  document.getElementById('taskInput').focus();
+  autoResize(document.getElementById('taskInput'));
+  showOutTab('chat');
+}
+function smoothScroll(id){document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}
+
+// ── PARSE ──
+function parseSteps(text){
+  const steps=[];let cur=null;let fence=false;
+  for(const line of text.split('\n')){
+    const t=line.trim();
+    if(!t&&!fence){if(cur){steps.push(cur);cur=null;}continue;}
+    if(t.startsWith('```')){
+      if(!fence){if(cur)steps.push(cur);cur={type:'code',content:line,isCode:true};fence=true;}
+      else{cur.content+=('\n'+line);steps.push(cur);cur=null;fence=false;}
+      continue;
+    }
+    if(fence){cur.content+=('\n'+line);continue;}
+    if(/^PLAN:/i.test(t)){if(cur)steps.push(cur);cur={type:'plan',content:t.replace(/^PLAN:\s*/i,'').trim()};}
+    else if(/^THINKING:/i.test(t)){if(cur)steps.push(cur);cur={type:'think',content:t.replace(/^THINKING:\s*/i,'').trim()};}
+    else if(/^RESULT:/i.test(t)){if(cur)steps.push(cur);cur={type:'result',content:t.replace(/^RESULT:\s*/i,'').trim()};}
+    else{if(cur)cur.content+=('\n'+line);else cur={type:'think',content:line};}
+  }
+  if(cur)steps.push(cur);
+  return steps.length?steps:[{type:'result',content:text}];
+}
+function extractCode(text){
+  const m=[];const re=/```(?:\w+)?\n?([\s\S]*?)```/g;let x;
+  while((x=re.exec(text))!==null)m.push(x[1]);
+  return m.join('\n\n');
+}
+
+// ── RUN AGENT ──
+async function runAgent(){
+  const task=document.getElementById('taskInput').value.trim();
+  if(!task||S.isRunning)return;
+  S.isRunning=true;
+
+  const btn=document.getElementById('sendBtn');
+  btn.disabled=true;
+  document.getElementById('sendSpin').style.display='block';
+  document.getElementById('sendIcon').style.display='none';
+  setStatus('running');
+
+  if(!S.currentChatId){S.currentChatId=genId();S.messageHistory=[];}
+
+  // Add user message to UI
+  const log=document.getElementById('chatLog');
+  log.style.display='flex';
+  document.getElementById('chatEmpty').style.display='none';
+  const turnWrap=document.createElement('div');
+  const userRow=document.createElement('div');userRow.className='msg-user';
+  const bubble=document.createElement('div');bubble.className='msg-user-bubble';
+  bubble.textContent=task+(S.files.length?' [+'+S.files.length+' file(s)]':'');
+  userRow.appendChild(bubble);turnWrap.appendChild(userRow);
+  log.appendChild(turnWrap);
+  scrollChat();
+
+  // Clear input
+  clearInput();
+
+  // AI thinking
+  const {aiWrap,dots}=addAIMessage();
+  turnWrap.appendChild(aiWrap.parentElement||aiWrap);
+
+  // Build content
+  const msgContent=[];
+  for(const f of S.files){
+    if(f.type.startsWith('image/')){
+      msgContent.push({type:'image',source:{type:'base64',media_type:f.type,data:f.base64}});
+      msgContent.push({type:'text',text:'[Image: '+f.name+']'});
+    } else {
+      let decoded='';try{decoded=atob(f.base64);}catch(e){decoded='(binary)';}
+      msgContent.push({type:'text',text:'<file name="'+f.name+'">\n'+decoded+'\n</file>'});
+    }
+  }
+  msgContent.push({type:'text',text:task});
+
+  const isEdit=S.files.length>0&&/edit|modify|change|add|remove|update|fix|refactor|convert|transform|improve|rewrite/i.test(task);
+  S.messageHistory.push({role:'user',content:msgContent});
+
+  const sys=`You are KevinAI, an expert AI software engineer similar to Devin. You remember earlier context in this conversation. Structure all responses:
+
+PLAN: (brief step-by-step approach)
+THINKING: (your reasoning)
+[code in fenced blocks with language tag]
+RESULT: (summary of what was done)
+
+${isEdit?'CRITICAL: The user wants you to edit their uploaded file. Output the COMPLETE edited file in a single fenced code block — do not truncate.':''}
+Write real, working, production-quality code.`;
+
+  const turnSteps=[];
+  try{
+    const resp=await fetch(WORKER_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'deepseek/deepseek-r1-0528:free',max_tokens:4096,system:sys,messages:S.messageHistory})
+    });
+    if(!resp.ok){const err=await resp.json().catch(()=>({}));throw new Error('API error '+resp.status+': '+(err?.error?.message||resp.statusText));}
+    const data=await resp.json();
+    const fullText=(data.content||[]).map(b=>b.text||'').join('');
+
+    dots.remove();
+    S.messageHistory.push({role:'assistant',content:fullText});
+
+    const steps=parseSteps(fullText);
+    for(let i=0;i<steps.length;i++){
+      await new Promise(r=>setTimeout(r,i*55));
+      const s=steps[i];
+      addStepToAI(aiWrap,s.type,s.content,s.type==='code');
+      turnSteps.push({type:s.type,content:s.content,isCode:s.type==='code'});
+    }
+
+    if(isEdit){
+      const code=extractCode(fullText);
+      if(code){
+        const src=S.files[0];
+        S.editedContent=code;S.editedFilename='edited_'+src.name;S.editedMime=src.type||'text/plain';
+        document.getElementById('otab-edited').style.display='block';
+        document.getElementById('rail-edited').style.opacity='1';
+        document.getElementById('rail-edited').style.pointerEvents='auto';
+        const ep=document.getElementById('op-edited');ep.innerHTML='';
+        const lbl=document.createElement('div');lbl.className='preview-label';lbl.textContent=S.editedFilename+' — ready to download';ep.appendChild(lbl);
+        const pre=document.createElement('pre');pre.className='edited-code';pre.textContent=code;ep.appendChild(pre);
+        document.getElementById('dlBtn').classList.add('vis');
+        addStepToAI(aiWrap,'file','Edited file ready: '+S.editedFilename+'\nClick "Edited File" tab above to view and download.',false);
+        turnSteps.push({type:'file',content:'Edited file ready: '+S.editedFilename,isCode:false});
+      }
+    }
+
+    // Check if any code step looks like HTML — offer live preview
+    const htmlStep = steps.find(s => s.type==='code' && (
+      /<!DOCTYPE/i.test(s.content) || /<html/i.test(s.content) ||
+      /<body/i.test(s.content) || /<div/i.test(s.content) || /<style/i.test(s.content)
+    ));
+    if(htmlStep){
+      const rawHtml = htmlStep.content.replace(/^```\w*\n?/,'').replace(/```$/,'').trim();
+      showLivePreview(rawHtml);
+      document.getElementById('otab-livepreview').style.display='block';
+    }
+
+    // Show export button once chat has content
+    document.getElementById('exportBtn').style.display='flex';
+
+    // Save chat
+    const existing=getChatById(S.currentChatId);
+    const title=existing?.title||(task.length>42?task.slice(0,42)+'…':task);
+    const preview=task.slice(0,60);
+    const turns=(existing?.turns||[]);
+    turns.push({userText:task+(S.files.length?' [+'+S.files.length+' file(s)]':''),steps:turnSteps,ts:Date.now()});
+    upsertChat({id:S.currentChatId,title,preview,turns,apiHistory:S.messageHistory,updatedAt:Date.now()});
+    renderSidebar();
+
+    S.files=[];renderFileList();updateAttachBar();
+    document.getElementById('fileNote').style.display='none';
+    setStatus('done');
+  }catch(err){
+    dots.remove();
+    addStepToAI(aiWrap,'error',String(err),false);
+    setStatus('error');
+  }
+
+  btn.disabled=false;
+  document.getElementById('sendSpin').style.display='none';
+  document.getElementById('sendIcon').style.display='block';
+  S.isRunning=false;
+}
+
+
+// ── COPY CODE BUTTON ──
+function addCopyBtn(card, code) {
+  const head = card.querySelector('.step-card-head');
+  if (!head) return;
+  const btn = document.createElement('button');
+  btn.style.cssText = 'margin-left:auto;background:var(--bg5);border:1px solid var(--border2);border-radius:5px;padding:3px 8px;font-size:.65rem;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:4px;font-family:var(--sans);transition:all .15s';
+  btn.innerHTML = '<i class="fa-regular fa-copy" style="font-size:10px"></i> Copy';
+  btn.onclick = () => {
+    navigator.clipboard.writeText(code).then(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check" style="font-size:10px;color:var(--green)"></i> Copied!';
+      setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy" style="font-size:10px"></i> Copy'; }, 1800);
+    });
+  };
+  btn.addEventListener('mouseover', () => btn.style.borderColor = 'var(--accent)');
+  btn.addEventListener('mouseout', () => btn.style.borderColor = 'var(--border2)');
+  head.appendChild(btn);
+}
+
+// ── LIVE PREVIEW ──
+function showLivePreview(html) {
+  document.getElementById('otab-livepreview').style.display = 'block';
+  document.getElementById('rail-preview').style.opacity = '1';
+  document.getElementById('rail-preview').style.pointerEvents = 'auto';
+  const pane = document.getElementById('op-livepreview');
+  pane.innerHTML = '';
+
+  // toolbar
+  const toolbar = document.createElement('div');
+  toolbar.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap';
+  toolbar.innerHTML = '<span style="font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Live Preview</span><div style="flex:1"></div>';
+  const reloadBtn = document.createElement('button');
+  reloadBtn.style.cssText = 'background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px';
+  reloadBtn.innerHTML = '<i class="fa-solid fa-rotate-right" style="font-size:10px"></i> Reload';
+  const newTabBtn = document.createElement('button');
+  newTabBtn.style.cssText = 'background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:5px';
+  newTabBtn.innerHTML = '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:10px"></i> Open tab';
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'width:100%;height:420px;border:1px solid var(--border2);border-radius:10px;background:white';
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+  reloadBtn.onclick = () => { iframe.srcdoc = ''; setTimeout(() => { iframe.srcdoc = html; }, 50); };
+  newTabBtn.onclick = () => { const w = window.open('','_blank'); w.document.write(html); w.document.close(); };
+  toolbar.appendChild(reloadBtn);
+  toolbar.appendChild(newTabBtn);
+  pane.appendChild(toolbar);
+  pane.appendChild(iframe);
+  iframe.srcdoc = html;
+  showOutTab('livepreview');
+}
+
+// ── EXPORT CHAT ──
+function exportChat() {
+  const chat = getChatById(S.currentChatId);
+  if (!chat) return;
+  let md = '# ' + chat.title + '\n\n';
+  md += '_Exported from KevinAI · ' + new Date().toLocaleString() + '_\n\n---\n\n';
+  (chat.turns || []).forEach((turn, i) => {
+    md += '## Message ' + (i+1) + '\n\n';
+    md += '**You:** ' + turn.userText + '\n\n';
+    (turn.steps || []).forEach(s => {
+      if (s.isCode) {
+        md += '```\n' + s.content.replace(/^```\w*\n?/, '').replace(/```$/, '').trim() + '\n```\n\n';
+      } else {
+        md += '**' + (s.type.charAt(0).toUpperCase()+s.type.slice(1)) + ':** ' + s.content + '\n\n';
+      }
+    });
+    md += '---\n\n';
+  });
+  const blob = new Blob([md], {type:'text/markdown'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (chat.title.replace(/[^a-z0-9]/gi,'_').toLowerCase() || 'kevinai_chat') + '.md';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── DRAG DROP ──
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');handleFiles(e.dataTransfer.files)});
+
+// ── THEME ──
+function toggleTheme(){
+  const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.getElementById('themeIcon').className=d?'fa-solid fa-sun':'fa-solid fa-moon';
+  localStorage.setItem('kevinai-theme',d?'light':'dark');
+}
+(function(){
+  const s=localStorage.getItem('kevinai-theme');
+  if(s){document.documentElement.setAttribute('data-theme',s);const i=document.getElementById('themeIcon');if(i)i.className=s==='light'?'fa-solid fa-sun':'fa-solid fa-moon';}
+})();
+
+// ── UTIL ──
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',()=>{renderSidebar()});
+</script>
+</body>
+</html>
